@@ -1,0 +1,25 @@
+h2{
+    text-align: center;
+    margin-top: 20px;
+}
+
+.container{
+    margin-top: 40px;
+    display: flex;
+    gap: 10px;
+    height: 450px;
+    justify-content: space-around;
+}
+
+.item{
+    width: 450px;
+    height: 450px;
+    border-radius: 10px;
+}
+
+img{
+    width: 450px;
+    height: 450px;
+    border-radius: 10px;
+}
+

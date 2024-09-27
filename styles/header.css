@@ -1,0 +1,133 @@
+header {
+    width: 100%;
+    padding: 18px 5%;
+    background-color: #1d1d1d;
+}
+
+#navbar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#navbar #logo {
+    font-size: 24px;
+    color: orangered;
+}
+
+#nav_list {
+    display: flex;
+    list-style: none;
+    gap: 48px;
+}
+
+#nav-item a {
+    text-decoration: none;
+    color: whitesmoke;
+    font-weight: 600;
+}
+
+#nav-item.active a {
+    color: white;
+    border-bottom: 3px solid green;
+}
+
+#sidebar {
+    height: 100%;
+    width: 250px; /* Ajuste conforme necessário */
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: #333;
+    color: white;
+    overflow-x: hidden;
+    transition: 0.5s;
+    display: flex;
+    flex-direction: column;
+    z-index: 9999; /* Garante que a sidebar esteja sobrepondo outros elementos */
+}
+
+/* Estilo do cabeçalho do sidebar */
+#sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #444; /* Opcional: cor de fundo para o cabeçalho */
+}
+
+/* Estilo do botão de fechar */
+#sidebar button#close-sidebar {
+    font-size: 36px;
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+/* Estilo da seção de perfil */
+#profile-section {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#profile-image {
+    width: 80px; /* Ajuste conforme necessário */
+    height: 80px; /* Ajuste conforme necessário */
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid white; /* Borda ao redor da imagem */
+}
+
+#user-name {
+    margin: 10px 0;
+    color: #fff;
+    font-size: 1.2rem; /* Ajuste conforme necessário */
+}
+
+/* Estilo da seção de configurações */
+#settings-section {
+    margin-top: auto; /* Alinha a seção de configurações na parte inferior, acima do logout */
+    padding: 20px;
+    text-align: center;
+}
+
+#settings-section a {
+    text-decoration: none;
+    color: whitesmoke;
+    font-family: 'Poppins', 'sans-serif';
+    font-size: 1rem; /* Ajuste conforme necessário */
+}
+
+#settings-section a:hover {
+    color: #ddd; /* Cor ao passar o mouse */
+}
+
+/* Estilo da seção de logout */
+#logout-section {
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid #444; /* Linha separadora */
+}
+
+#logout-section a {
+    text-decoration: none;
+    color: whitesmoke;
+    font-family: 'Poppins', 'sans-serif';
+    font-size: 1rem;
+}
+
+#logout-section a:hover {
+    color: #ddd; 
+}
+
+#profile-icon {
+    font-size: 26px;
+    color: white;
+    cursor: pointer;
+}
+
+main {
+    padding-top: 80px;
+}

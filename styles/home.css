@@ -1,0 +1,66 @@
+#home {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+}
+
+#cta{
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    margin-top: 5%;
+}
+
+#cta .title {
+    font-size: 4rem;
+    color: #1d1d1d;
+}
+#cta .title span {
+    color: green ;
+}
+
+#cta .descricao {
+    font-size: 1.2rem;
+
+}
+
+#cta_button {
+    display: flex;
+    gap: 24px;
+}
+
+#cta_button a {
+    text-decoration: none;
+    color: #1d1d1d;
+}
+
+#phone {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 8px 14px;
+    font-weight: 500;
+    box-shadow: 0px 0px 12px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+}
+
+#phone button {
+    box-shadow: none;
+
+}
+
+#banner {
+    display: flex;
+    align-items: start;
+    justify-content: end;
+    width: 70%;
+    z-index: 2;
+}
+
+#banner img { 
+    height: 100%;
+    width: fit-content;
+}
+
