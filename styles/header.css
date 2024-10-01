@@ -35,7 +35,7 @@ header {
 
 #sidebar {
     height: 100%;
-    width: 250px; /* Ajuste conforme necessário */
+    width: 250px; 
     position: fixed;
     top: 0;
     right: 0;
@@ -45,19 +45,19 @@ header {
     transition: 0.5s;
     display: flex;
     flex-direction: column;
-    z-index: 9999; /* Garante que a sidebar esteja sobrepondo outros elementos */
+    z-index: 9999; 
 }
 
-/* Estilo do cabeçalho do sidebar */
+
 #sidebar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    background-color: #444; /* Opcional: cor de fundo para o cabeçalho */
+    background-color: #444; 
 }
 
-/* Estilo do botão de fechar */
+
 #sidebar button#close-sidebar {
     font-size: 36px;
     background: transparent;
@@ -66,29 +66,29 @@ header {
     cursor: pointer;
 }
 
-/* Estilo da seção de perfil */
+
 #profile-section {
     text-align: center;
     margin: 20px 0;
 }
 
 #profile-image {
-    width: 80px; /* Ajuste conforme necessário */
-    height: 80px; /* Ajuste conforme necessário */
+    width: 80px; 
+    height: 80px; 
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid white; /* Borda ao redor da imagem */
+    border: 3px solid white;
 }
 
 #user-name {
     margin: 10px 0;
     color: #fff;
-    font-size: 1.2rem; /* Ajuste conforme necessário */
+    font-size: 1.2rem; 
 }
 
-/* Estilo da seção de configurações */
+
 #settings-section {
-    margin-top: auto; /* Alinha a seção de configurações na parte inferior, acima do logout */
+    margin-top: auto;
     padding: 20px;
     text-align: center;
 }
@@ -97,18 +97,18 @@ header {
     text-decoration: none;
     color: whitesmoke;
     font-family: 'Poppins', 'sans-serif';
-    font-size: 1rem; /* Ajuste conforme necessário */
+    font-size: 1rem; 
 }
 
 #settings-section a:hover {
-    color: #ddd; /* Cor ao passar o mouse */
+    color: #ddd; 
 }
 
-/* Estilo da seção de logout */
+
 #logout-section {
     padding: 20px;
     text-align: center;
-    border-top: 1px solid #444; /* Linha separadora */
+    border-top: 1px solid #444; 
 }
 
 #logout-section a {

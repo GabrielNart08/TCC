@@ -70,18 +70,28 @@ session_start();
 
     <h2>Escolha em qual quadra você quer jogar</h2>
 
-<div class="container">
+    <div class="container">
     <div class="item">
-        <div class="image-container">
-            <img src="img/futsalsociety.jpg" alt="society">
-            <div class="overlay">Quadra de Society</div>
-        </div>
+        <a href="society.php"> 
+            <div class="image-container">
+                <img src="img/futsalsociety.jpg" alt="society">
+                <div class="overlay">
+                    <h3>Quadra de Society</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+            </div>
+        </a>
     </div>
     <div class="item">
-        <div class="image-container">
-            <img src="img/futsalquad.jpg" alt="futsal">
-            <div class="overlay">Quadra de Futsal</div>
-        </div>
+        <a href="futsal.php"> 
+            <div class="image-container">
+                <img src="img/futsalquad.jpg" alt="futsal">
+                <div class="overlay">
+                    <h3>Quadra de Futsal</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                </div>
+            </div>
+        </a>
     </div>
 </div>
     <script src="javascript/script.js"></script>
