@@ -82,7 +82,7 @@ session_start();
                 </p>
 
                 <div id="cta_button">
-                    <a href="#" id="btn-default">Ver Quadras</a>
+                    <a href="quadras.php" id="btn-default">Ver Quadras</a>
                     <a href="tel:+554899999-9999" id="phone">
                         <button id="btn-default"><i class="fa-solid fa-phone"></i></button>(48)99999-9999
                     </a>
@@ -107,7 +107,6 @@ session_start();
         </section>
     </main>
 
-    <script src="javascript/script.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         var sidebar = document.getElementById('sidebar');
