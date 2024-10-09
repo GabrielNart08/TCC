@@ -26,7 +26,7 @@ session_start();
                     <a href="quadras.php">Quadras</a>
                 </li>
                 <li id="nav-item">
-                    <a href="quadras.php">Contato</a>
+                    <a href="contatos.php">Contato</a>
                 </li>
                 <li id="nav-item">
                     <a href="reservas.php">Minhas Reservas</a>

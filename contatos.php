@@ -13,6 +13,16 @@ session_start();
     <link rel="stylesheet" href="styles/header.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>Página Inicial</title>
+    <style>
+      h2{
+        text-align: center;
+        margin: 25px;
+      }
+      #cta_button{
+        align-items: center;
+        margin: 30px;
+      }
+    </style>
 </head>
 <body>
     <header>
@@ -65,29 +75,20 @@ session_start();
         </div>
     </div>
 </div>
+
+                  
       
     </header>
 
-    <main id="content">
-        <section id="home">
-            <div class="shape"></div>
-            <div id="cta">
-                <h1 class="title">
-                    Reserve com mais
-                    <span>facilidade!</span>
-                </h1>
-                <p class="descricao">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                    Quisque sed aliquam est, tincidunt mollis eros. Ut sit amet lacinia urna. 
-                </p>
-
-                <div id="cta_button">
+    <h2>Dúvida? Contate-nos</h2>
+                    
+    <div id="cta_button">
                     <a href="quadras.php" id="btn-default">Ver Quadras</a>
                     <a href="tel:+554899999-9999" id="phone">
                         <button id="btn-default"><i class="fa-solid fa-phone"></i></button>(48)99999-9999
                     </a>
                 </div>
-
+                    
                 <div class="social-media">
                     <a href="#">
                         <i class="fa-brands fa-whatsapp"></i>
@@ -100,13 +101,6 @@ session_start();
                     </a>
                 </div>
             </div>
-
-            <div id="banner">
-                <img src="img/telaprincipal1.png" alt="principal">
-            </div>
-        </section>
-    </main>
-
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         var sidebar = document.getElementById('sidebar');
