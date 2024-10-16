@@ -235,6 +235,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var sidebar = document.getElementById('sidebar');
     var profileIcon = document.getElementById('profile-icon');
     var closeButton = document.getElementById('close-sidebar');
+    var modal = document.getElementById("myModal");
+    var btns = document.querySelectorAll(".ver-mais");
+    var span = document.getElementsByClassName("close")[0];
+    var horarioSelecionado = null;
 
     sidebar.style.width = '0';
 
@@ -248,10 +252,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     profileIcon.addEventListener('click', openSidebar);
     closeButton.addEventListener('click', closeSidebar);
-
-    var modal = document.getElementById("myModal");
-    var btns = document.querySelectorAll(".ver-mais");
-    var span = document.getElementsByClassName("close")[0];
 
     btns.forEach(function(btn) {
         btn.onclick = function() {
@@ -272,49 +272,42 @@ document.addEventListener('DOMContentLoaded', function() {
             modal.style.display = "none";
         }
     }
+
     var horariosReservados = []; // Array para armazenar horários reservados
 
-document.querySelectorAll('.horario-btn').forEach(function(btn) {
-    btn.onclick = function() {
-        var horario = this.getAttribute('data-horario');
-        
-        // Verifica se o horário já está reservado
-        if (!horariosReservados.includes(horario)) {
-            horariosReservados.push(horario); // Adiciona o horário ao array
-            this.classList.add('indisponivel'); // Marca o botão como indisponível
-            alert("Horário " + horario + " reservado com sucesso!"); // Mensagem de sucesso
-        } else {
-            alert("Este horário já está reservado."); // Mensagem de erro
-        }
-    };
-    var horarioSelecionado = null; // Armazena o horário selecionado
-
-document.querySelectorAll('.horario-btn').forEach(function(btn) {
-    btn.onclick = function() {
-        // Remove a classe de seleção de qualquer botão previamente selecionado
-        if (horarioSelecionado) {
-            horarioSelecionado.classList.remove('selecionado');
-        }
-
-        // Adiciona a classe de selecionado ao botão atual
-        this.classList.add('selecionado');
-        horarioSelecionado = this; // Armazena o horário selecionado
-
-        // Quando o botão "Reservar" é clicado
-        document.querySelector('.reservar-btn').onclick = function() {
+    document.querySelectorAll('.horario-btn').forEach(function(btn) {
+        btn.onclick = function() {
+            // Remove a classe de seleção de qualquer botão previamente selecionado
             if (horarioSelecionado) {
-                horarioSelecionado.classList.add('indisponivel'); // Marca como reservado
-                alert("Horário " + horarioSelecionado.getAttribute('data-horario') + " reservado com sucesso!");
-                horarioSelecionado = null; // Reseta a seleção
-                // Aqui você pode adicionar a lógica para salvar a reserva
-            } else {
-                alert("Por favor, selecione um horário primeiro.");
+                horarioSelecionado.classList.remove('selecionado');
             }
+
+            // Adiciona a classe de selecionado ao botão atual
+            this.classList.add('selecionado');
+            horarioSelecionado = this; // Armazena o horário selecionado
         };
+    });
+
+    // Quando o botão "Reservar" é clicado
+    document.querySelector('.reservar-btn').onclick = function() {
+        if (horarioSelecionado) {
+            // Marca como reservado
+            horarioSelecionado.classList.add('indisponivel');
+  
+
+            // Redireciona para a tela de pagamento com parâmetros na URL
+            var quadraNome = document.getElementById("modal-nome").innerText;
+            var horario = horarioSelecionado.getAttribute('data-horario');
+            var valor = document.getElementById("modal-valor").innerText;
+
+            // Aqui você pode construir a URL da página de pagamento
+            window.location.href = `pagamento.php?quadra=${encodeURIComponent(quadraNome)}&horario=${encodeURIComponent(horario)}&valor=${encodeURIComponent(valor)}`;
+        } else {
+            alert("Por favor, selecione um horário primeiro.");
+        }
     };
 });
-});
-});
+
 </script>
 </body>
 </html>
