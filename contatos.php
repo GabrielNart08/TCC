@@ -105,15 +105,38 @@ session_start();
             </ul>
             <div id="login-section">
                 <?php if (!isset($_SESSION['user_id'])): ?>
-                    <button id="btn-default"><a href="login.php" id="Login-botton">Login</a></button>
+                    <button id="btn-default">
+                        <a href="login.php" id="Login-botton">Login</a>
+                    </button>
                 <?php endif; ?>
             </div>
+
             <div id="user-section">
                 <?php if (isset($_SESSION['user_id'])): ?>
+
                     <i class="fa-regular fa-user" id="profile-icon"></i>
                 <?php endif; ?>
             </div>
+
         </nav>
+
+        <div id="sidebar">
+    <div id="sidebar-header">
+        <button id="close-sidebar">&times;</button>
+    </div>
+    <div id="sidebar-content">
+        <div id="profile-section">
+            <img src="path/to/profile-image.jpg" alt="Profile Picture" id="profile-image">
+            <h2 id="user-name">Nome do Usuário</h2>
+        </div>
+        <div id="settings-section">
+            <a href="config.php">Configurações</a>
+            <br>
+            <a href="logout.php">Sair</a>
+        </div>
+    </div>
+</div>
+      
     </header>
 
     <h2>Dúvida? Contate-nos</h2>

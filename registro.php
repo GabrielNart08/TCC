@@ -2,7 +2,7 @@
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "bancotcc";
+$dbname = "reservaquadras";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "Email já registrado.";
         } else {
             // Prepara a consulta SQL para inserir um novo usuário
-            $stmt = $conn->prepare("INSERT INTO usuario (nome, usuario, email, senha) VALUES (?, ?, ?, ?)");
+            $stmt = $conn->prepare("INSERT INTO usuario (nome, username, email, senha) VALUES (?, ?, ?, ?)");
             $stmt->bind_param("ssss", $name,$user, $email, $password);
 
             if ($stmt->execute()) {
