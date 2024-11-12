@@ -33,6 +33,7 @@ if (isset($_POST['user']) && isset($_POST['password'])) {
                 $_SESSION['user_id'] = $user['id_usuario'];
                 $_SESSION['user_name'] = $user['nome'];
                 $_SESSION['user_email'] = $user['email'];
+                $_SESSION['username'] = $user['username'];
                 
                 header("Location: index.php");
                 exit();

@@ -13,9 +13,12 @@ session_start();
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="styles/home.css">
     <link rel="stylesheet" href="styles/header.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>Aluguel de Quadras Esportivas</title>
     <style>
+
 .modal {
     display: none;
     position: fixed;
@@ -37,91 +40,84 @@ session_start();
     max-width: 800px;
     border-radius: 15px;
     display: flex;
-    max-height: 80%;
-    overflow: hidden; /* Impede a rolagem do conteúdo */
-    position: relative; /* Para o botão de fechar */
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
 }
 
 .modal-image {
-    flex: 1; /* Aumenta a flexibilidade da imagem */
-    border-radius: 15px 0 0 15px; /* Borda arredondada à esquerda */
-    overflow: hidden; /* Para garantir que a imagem não saia dos limites */
-}
-
-.modal-image img {
-    width: 100%; /* Aumenta a largura da imagem para preencher a área */
-    height: 100%; /* Faz a imagem ocupar toda a altura do container */
-    object-fit: cover; /* Cobre a área sem distorcer */
+    width: 100%;
+    height: 250px; /* Altura fixa para o carrossel */
+    margin-bottom: 20px;
+    border-radius: 15px 15px 0 0;
+    overflow: hidden;
 }
 
 .modal-info {
-    flex: 2;
-    padding-left: 20px; /* Espaçamento à esquerda do conteúdo textual */
-    border-radius: 0 15px 15px 0; /* Borda arredondada à direita */
-}
-
-.close {
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
-    position: absolute; /* Faz o botão de fechar ficar posicionado no canto */
-    right: 20px; /* Distância do lado direito */
-    top: 15px; /* Distância do topo */
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+    padding: 10px;
+    border-radius: 0 0 15px 15px;
 }
 
 .horarios {
     margin-top: 20px;
-    background-color: white; /* Fundo branco para os horários */
-    padding: 10px; /* Adiciona um pouco de espaçamento */
-    border-radius: 5px; /* Borda arredondada */
-    display: flex; /* Alinha os botões horizontalmente */
-    border: 1px solid #ccc; /* Borda ao redor da seção de horários */
 }
 
-.horario-btn {
-    margin: 5px; /* Espaçamento entre os botões de horário */
-    padding: 10px 15px; /* Aumenta o tamanho dos botões */
-    background-color: #f0f0f0; /* Cor de fundo dos botões */
-    border: 1px solid #ccc; /* Borda dos botões */
-    cursor: pointer;
-    border-radius: 4px; /* Borda arredondada */
-    transition: background-color 0.3s; /* Transição suave */
+
+.horario-intervalo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f0f0f0;
+    margin-bottom: 5px;
+    border-radius: 4px;
 }
 
-.horario-btn:hover {
-    background-color: #dcdcdc; /* Cor ao passar o mouse */
-}
-
-.reservar-btn {
-    margin-top: 20px;
+.reservar-btn-horario {
+    padding: 5px 10px;
     background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 15px 50px; /* Aumenta a altura e largura do botão */
+    border-radius: 4px;
     cursor: pointer;
-    border-radius: 5px; /* Borda arredondada */
-    font-size: 16px; /* Aumenta a fonte */
-    width: 100%; /* Botão ocupa toda a largura disponível */
 }
 
-.reservar-btn:hover {
+.reservar-btn-horario:hover {
     background-color: #45a049;
 }
-
-.horario-btn.selecionado {
-    background-color: #76c7c0; /* Verde claro quando selecionado */
+.swiper-container {
+    position: relative;
+    width: 100%;
+    height: 250px; /* Ajuste a altura conforme necessário */
 }
 
-.horario-btn.indisponivel {
-    background-color: red; /* Vermelho para horários reservados */
-    pointer-events: none; /* Impede que o botão seja clicado */
+.swiper-button-next,
+.swiper-button-prev {
+    position: absolute;
+    top: 50%; /* Coloca as setas no meio da imagem */
+    transform: translateY(-50%); /* Ajuste para centralizar verticalmente */
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.5); /* Cor do fundo das setas */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.swiper-button-next {
+    right: 10px; /* Alinha a seta à direita */
+}
+
+.swiper-button-prev {
+    left: 10px; /* Alinha a seta à esquerda */
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    background-color: rgba(0, 0, 0, 0.8); /* Efeito ao passar o mouse */
 }
     </style>
 </head>
@@ -159,21 +155,25 @@ session_start();
     </nav>
 
     <div id="sidebar">
-        <div id="sidebar-header">
-            <button id="close-sidebar">&times;</button>
+    <div id="sidebar-header">
+        <button id="close-sidebar">&times;</button>
+    </div>
+    <div id="sidebar-content">
+        <div id="profile-section">
+        <h2 id="user-name">
+    <span style="color: white;">Bem-Vindo,</span>
+    <span style="color: green;"><?php echo isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : ""; ?></span>
+</h2>
         </div>
-        <div id="sidebar-content">
-            <div id="profile-section">
-                <img src="path/to/profile-image.jpg" alt="Profile Picture" id="profile-image">
-                <h2 id="user-name">Nome do Usuário</h2>
-            </div>
-            <div id="settings-section">
-                <a href="config.php">Configurações</a>
-                <br>
-                <a href="logout.php">Sair</a>
-            </div>
+        <div id="settings-section">
+            <a href="config.php">Configurações</a>
+            <br>
+            <a href="logout.php">Sair</a>
         </div>
     </div>
+</div>
+
+      
 </header>
 
 <div class="quadras-container">
@@ -211,25 +211,44 @@ session_start();
 <div id="myModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-        <div class="modal-image">
-            <img id="modal-img" src="" alt="Imagem da Quadra" style="width: 100%; height: auto;">
+        
+        <!-- Carrossel Swiper no topo -->
+        <div class="swiper-container modal-image">
+            <div class="swiper-wrapper">
+                <!-- As imagens do carrossel serão adicionadas dinamicamente pelo JavaScript -->
+                <div class="swiper-slide"><img src="img/society.jpg" alt="Imagem 1"></div>
+                <div class="swiper-slide"><img src="img/futsalquad.jpg" alt="Imagem 2"></div>
+                <div class="swiper-slide"><img src="img/futsalsociety.jpg" alt="Imagem 3"></div>
+            </div>
+            <!-- Botões de navegação do Swiper -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
         </div>
+
+        <!-- Informações da quadra abaixo do carrossel -->
         <div class="modal-info">
             <h2 id="modal-nome">Detalhes da Quadra</h2>
             <p id="modal-endereco"></p>
             <p id="modal-valor"></p>
+
             <div class="horarios">
-    <h3>Horários Disponíveis:</h3>
-    <button class="horario-btn" data-horario="08:00">08:00</button>
-    <button class="horario-btn" data-horario="10:00">10:00</button>
-    <button class="horario-btn" data-horario="12:00">12:00</button>
-    <button class="horario-btn" data-horario="14:00">14:00</button>
+                <h3>Horários:</h3>
+                <div class="horario-intervalo">
+                    <span>18:00 - 19:00</span> 
+                    <button class="reservar-btn-horario" data-horario="18:00 - 19:00">Reservar</button>
+                </div>
+                <div class="horario-intervalo">
+                    <span>19:00 - 20:00</span> 
+                    <button class="reservar-btn-horario" data-horario="19:00 - 20:00">Reservar</button>
+                </div>
+                <div class="horario-intervalo">
+                    <span>20:00 - 21:00</span> 
+                    <button class="reservar-btn-horario" data-horario="20:00 - 21:00">Reservar</button>
+                </div>
             </div>
-            <button class="reservar-btn">Reservar</button>
         </div>
     </div>
 </div>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var sidebar = document.getElementById('sidebar');
@@ -238,7 +257,26 @@ document.addEventListener('DOMContentLoaded', function() {
     var modal = document.getElementById("myModal");
     var btns = document.querySelectorAll(".ver-mais");
     var span = document.getElementsByClassName("close")[0];
-    var horarioSelecionado = null;
+    var swiper;
+
+    btns.forEach(function(btn) {
+        btn.onclick = function() {
+            modal.style.display = "block";
+            document.getElementById("modal-nome").innerText = this.getAttribute("data-nome");
+            document.getElementById("modal-endereco").innerText = "Endereço: " + this.getAttribute("data-endereco");
+            document.getElementById("modal-valor").innerText = "Valor: " + this.getAttribute("data-valor");
+
+            if (!swiper) {
+                swiper = new Swiper('.swiper-container', {
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    loop: true,  // Opção para criar loop infinito no carrossel
+                });
+            }
+        }
+    });
 
     sidebar.style.width = '0';
 
@@ -273,41 +311,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    var horariosReservados = []; // Array para armazenar horários reservados
-
-    document.querySelectorAll('.horario-btn').forEach(function(btn) {
+    // Função de reserva para cada horário
+    document.querySelectorAll('.reservar-btn-horario').forEach(function(btn) {
         btn.onclick = function() {
-            // Remove a classe de seleção de qualquer botão previamente selecionado
-            if (horarioSelecionado) {
-                horarioSelecionado.classList.remove('selecionado');
-            }
-
-            // Adiciona a classe de selecionado ao botão atual
-            this.classList.add('selecionado');
-            horarioSelecionado = this; // Armazena o horário selecionado
-        };
-    });
-
-    // Quando o botão "Reservar" é clicado
-    document.querySelector('.reservar-btn').onclick = function() {
-        if (horarioSelecionado) {
-            // Marca como reservado
-            horarioSelecionado.classList.add('indisponivel');
-  
-
-            // Redireciona para a tela de pagamento com parâmetros na URL
+            var horario = this.getAttribute('data-horario');
             var quadraNome = document.getElementById("modal-nome").innerText;
-            var horario = horarioSelecionado.getAttribute('data-horario');
             var valor = document.getElementById("modal-valor").innerText;
 
-            // Aqui você pode construir a URL da página de pagamento
+            // Redireciona para a página de pagamento com os detalhes do horário selecionado
             window.location.href = `pagamento.php?quadra=${encodeURIComponent(quadraNome)}&horario=${encodeURIComponent(horario)}&valor=${encodeURIComponent(valor)}`;
-        } else {
-            alert("Por favor, selecione um horário primeiro.");
-        }
-    };
+        };
+    });
 });
-
 </script>
 </body>
 </html>

@@ -1,122 +1,113 @@
-
-body {
-    margin: 0;
-    padding: 0;
-
+body{
+    background-color: #1d1d1d;
 }
-
-
 h1 {
-    margin-top: 20px;
     text-align: center;
-    font-size: 24px;
-    color: black;
-}
-
-
-form {
+    font-size: 28px;
     color: white;
-    display: flex; 
-    flex-direction: column; 
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.8); 
-    padding: 30px;
-    width: 100%;
-    max-width: 500px; 
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-    position: absolute; 
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%, -50%);
-    margin-top: 100px;
-}
-
-
-/* Estilo para o grupo de campos do formulário */
-.form-group {
     margin-bottom: 20px;
 }
 
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
+header {
+    background-color: #1d1d1d;
+    padding: 18px 5%;
+}
+main {
+    display: flex;
+    justify-content: center; /* Centraliza o formulário horizontalmente */
+    padding-top: 120px; /* Espaço para compensar a navbar fixa */
 }
 
-input[type="text"], input[type="email"], input[type="file"], button {
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(32, 32, 32);
+    padding: 30px;
+    border-radius: 8px;
     width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+    max-width: 500px; /* Largura máxima para o formulário */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 20px auto; /* Centraliza o formulário horizontalmente */
+}
+
+.form-group {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+input[type="text"], input[type="email"] {
+    width: 100%;
+    padding: 8px 0; /* Ajusta o padding para cima e baixo */
+    border: none; /* Remove as bordas */
+    border-bottom: 2px solid #ddd; /* Adiciona uma borda apenas na parte inferior */
+    font-size: 16px;
+    background-color: transparent; /* Remove qualquer cor de fundo */
+    box-sizing: border-box;
+    color: white;
+}
+
+input[type="text"]:focus, input[type="email"]:focus {
+    outline: none; /* Remove o contorno ao focar */
+    border-bottom: 2px solid #4CAF50; /* Borda inferior em verde ao focar */
+    box-shadow: none; /* Remove qualquer sombra */
 }
 
 button {
+    width: 100%;
+    max-width: 100%;
+    padding: 15px;
+    border-radius: 4px;
+    border: none;
     background-color: #4CAF50;
     color: white;
+    font-size: 16px;
     cursor: pointer;
-    border: none;
-    margin-top: 10px;
-    padding: 12px;
-    border-radius: 4px;
+    margin-top: 30px;
 }
 
 button:hover {
     background-color: #45a049;
 }
 
-/* Estilo para o container da foto de perfil dentro do formulário */
-.profile-picture-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 10px;
-}
-
-/* Estilo para a foto de perfil */
-.profile-picture {
-    width: 120px; /* Tamanho fixo para a imagem */
-    height: 120px;
-    margin-top: 10px;
-    border-radius: 50%;
-    overflow: hidden;
-    background-color: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid #ccc; /* Borda ao redor da foto */
-}
-
-/* A imagem vai se ajustar ao tamanho da div */
-.profile-picture img {
+/* Estilo para a linha separadora */
+.separator-line {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: 1px;
+    background-color: #ddd;
+    margin: 20px 0;
 }
 
-/* Caso não haja imagem, exibe o texto */
-.default-picture {
-    font-size: 14px;
-    color: #888;
-    font-weight: bold;
+/* Estilo da mensagem */
+.message-box {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 500px;
+    padding: 15px;
+    color: #fff;
+    font-size: 16px;
     text-align: center;
-}
-
-/* Estilo para a mensagem de sucesso ou erro */
-.message {
-    margin-top: 20px;
-    padding: 10px;
     border-radius: 5px;
-    font-size: 14px;
+    z-index: 1000;
+    animation: slideDown 0.5s forwards;
 }
 
-.message.success {
+.message-box.success {
     background-color: #4CAF50;
-    color: white;
 }
 
-.message.error {
-    background-color: #f44336;
-    color: white;
+.message-box.error {
+    background-color: #F44336;
+}
+
+@keyframes slideDown {
+    from {
+        top: -100px;
+    }
+    to {
+        top: 20px;
+    }
 }

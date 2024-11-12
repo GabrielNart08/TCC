@@ -159,21 +159,25 @@ session_start();
     </nav>
 
     <div id="sidebar">
-        <div id="sidebar-header">
-            <button id="close-sidebar">&times;</button>
+    <div id="sidebar-header">
+        <button id="close-sidebar">&times;</button>
+    </div>
+    <div id="sidebar-content">
+        <div id="profile-section">
+        <h2 id="user-name">
+    <span style="color: white;">Bem-Vindo,</span>
+    <span style="color: green;"><?php echo isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : ""; ?></span>
+</h2>
         </div>
-        <div id="sidebar-content">
-            <div id="profile-section">
-                <img src="path/to/profile-image.jpg" alt="Profile Picture" id="profile-image">
-                <h2 id="user-name">Nome do Usuário</h2>
-            </div>
-            <div id="settings-section">
-                <a href="config.php">Configurações</a>
-                <br>
-                <a href="logout.php">Sair</a>
-            </div>
+        <div id="settings-section">
+            <a href="config.php">Configurações</a>
+            <br>
+            <a href="logout.php">Sair</a>
         </div>
     </div>
+</div>
+
+      
 </header>
 
 <div class="quadras-container">

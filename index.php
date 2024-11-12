@@ -1,7 +1,7 @@
 <?php
 session_start();
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -55,8 +55,10 @@ session_start();
     </div>
     <div id="sidebar-content">
         <div id="profile-section">
-            <img src="path/to/profile-image.jpg" alt="Profile Picture" id="profile-image">
-            <h2 id="user-name">Nome do Usuário</h2>
+        <h2 id="user-name">
+    <span style="color: white;">Bem-Vindo,</span>
+    <span style="color: green;"><?php echo isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : ""; ?></span>
+</h2>
         </div>
         <div id="settings-section">
             <a href="config.php">Configurações</a>
@@ -65,6 +67,7 @@ session_start();
         </div>
     </div>
 </div>
+
       
     </header>
 
