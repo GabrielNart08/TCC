@@ -206,8 +206,8 @@ if (isset($_SESSION['message'])) {
     
     if (newPassword !== confirmNewPassword) {
         errorMessageDiv.querySelector('p').textContent = "A nova senha e a confirmação de senha não coincidem.";
-        errorMessageDiv.style.display = 'block'; // Exibe a div com a mensagem de erro
-        return false; // Impede o envio do formulário
+        errorMessageDiv.style.display = 'block';
+        return false; 
     }
 
     return true;
