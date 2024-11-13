@@ -36,8 +36,8 @@ session_start();
     margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 90%;
-    max-width: 800px;
+    width: 80%;
+    max-width: 600px;
     border-radius: 15px;
     display: flex;
     flex-direction: column;
@@ -47,11 +47,12 @@ session_start();
 
 .modal-image {
     width: 100%;
-    height: 250px; /* Altura fixa para o carrossel */
-    margin-bottom: 20px;
+    height: 250px;
+    margin-top: 20px;
     border-radius: 15px 15px 0 0;
     overflow: hidden;
 }
+
 
 .modal-info {
     padding: 10px;
@@ -88,17 +89,16 @@ session_start();
 .swiper-container {
     position: relative;
     width: 100%;
-    height: 250px; /* Ajuste a altura conforme necessário */
-}
+    height: 250px; }
 
 .swiper-button-next,
 .swiper-button-prev {
     position: absolute;
-    top: 50%; /* Coloca as setas no meio da imagem */
-    transform: translateY(-50%); /* Ajuste para centralizar verticalmente */
+    top: 50%;   
+    transform: translateY(-50%);     
     width: 40px;
     height: 40px;
-    background-color: rgba(0, 0, 0, 0.5); /* Cor do fundo das setas */
+    background-color: rgba(0, 0, 0, 0.5);   
     color: white;
     border-radius: 50%;
     display: flex;
@@ -108,17 +108,43 @@ session_start();
 }
 
 .swiper-button-next {
-    right: 10px; /* Alinha a seta à direita */
-}
+    right: 8px; }
 
 .swiper-button-prev {
-    left: 10px; /* Alinha a seta à esquerda */
-}
+    left: 8px; }
 
 .swiper-button-next:hover,
 .swiper-button-prev:hover {
-    background-color: rgba(0, 0, 0, 0.8); /* Efeito ao passar o mouse */
+    background-color: rgba(0, 0, 0, 0.8); }
+
+    .swiper-button-next::after,
+.swiper-button-prev::after {
+    font-size: 18px;
+    font-weight: bold; 
 }
+
+.swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;     border-radius: 15px; }
+
+    .close {
+    font-size: 36px; 
+    position: absolute;
+    top: -10px;
+    right: 15px;
+    color: #333;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;  
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #555; 
+}
+
     </style>
 </head>
 <body>
@@ -182,7 +208,7 @@ session_start();
         <div class="detalhes">
             <h2 class="nome">Quadra Society 1</h2>
             <p>Endereço: Rua Exemplo, 123</p>
-            <p>Valor: R$ 100/hora</p>
+            <p>Valor: R$100/hora</p>
             <button class="ver-mais" data-nome="Quadra Society 1" data-endereco="Rua Exemplo, 123" data-valor="R$ 100/hora" data-imagem="img/society.jpg">Ver mais</button>
         </div>
     </div>
@@ -212,20 +238,20 @@ session_start();
     <div class="modal-content">
         <span class="close">&times;</span>
         
-        <!-- Carrossel Swiper no topo -->
+       
         <div class="swiper-container modal-image">
             <div class="swiper-wrapper">
-                <!-- As imagens do carrossel serão adicionadas dinamicamente pelo JavaScript -->
+               
                 <div class="swiper-slide"><img src="img/society.jpg" alt="Imagem 1"></div>
                 <div class="swiper-slide"><img src="img/futsalquad.jpg" alt="Imagem 2"></div>
                 <div class="swiper-slide"><img src="img/futsalsociety.jpg" alt="Imagem 3"></div>
             </div>
-            <!-- Botões de navegação do Swiper -->
+          
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
         </div>
 
-        <!-- Informações da quadra abaixo do carrossel -->
+      
         <div class="modal-info">
             <h2 id="modal-nome">Detalhes da Quadra</h2>
             <p id="modal-endereco"></p>
@@ -266,15 +292,17 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById("modal-endereco").innerText = "Endereço: " + this.getAttribute("data-endereco");
             document.getElementById("modal-valor").innerText = "Valor: " + this.getAttribute("data-valor");
 
-            if (!swiper) {
-                swiper = new Swiper('.swiper-container', {
-                    navigation: {
-                        nextEl: '.swiper-button-next',
-                        prevEl: '.swiper-button-prev',
-                    },
-                    loop: true,  // Opção para criar loop infinito no carrossel
-                });
+            
+            if (swiper) {
+                swiper.destroy(true, true); 
             }
+            swiper = new Swiper('.swiper-container', {
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                loop: true, 
+            });
         }
     });
 
@@ -290,16 +318,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     profileIcon.addEventListener('click', openSidebar);
     closeButton.addEventListener('click', closeSidebar);
-
-    btns.forEach(function(btn) {
-        btn.onclick = function() {
-            modal.style.display = "block";
-            document.getElementById("modal-nome").innerText = this.getAttribute("data-nome");
-            document.getElementById("modal-endereco").innerText = "Endereço: " + this.getAttribute("data-endereco");
-            document.getElementById("modal-valor").innerText = "Valor: " + this.getAttribute("data-valor");
-            document.getElementById("modal-img").src = this.getAttribute("data-imagem");
-        }
-    });
 
     span.onclick = function() {
         modal.style.display = "none";
@@ -323,6 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     });
 });
+
 </script>
 </body>
 </html>

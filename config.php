@@ -8,13 +8,13 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$sql = "SELECT nome, username, email FROM usuario WHERE id_usuario = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param('i', $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
+$sql = "SELECT nome, username, email, senha FROM usuario WHERE id_usuario = ?";
+$stmt1 = $conn->prepare($sql);
+$stmt1->bind_param('i', $user_id);
+$stmt1->execute();
+$result = $stmt1->get_result();
 $user = $result->fetch_assoc();
-$stmt->close();
+$stmt1->close();
 
 $message = '';
 $messageClass = '';
@@ -23,27 +23,59 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nome = $_POST['nome'];
     $username = $_POST['username'];
     $email = $_POST['email'];
+    $current_password = $_POST['current_password'];
+    $new_password = $_POST['new_password'];
+    $confirm_new_password = $_POST['confirm_new_password'];
 
-    // Atualiza as informações no banco de dados
-    $sql = "UPDATE usuario SET nome = ?, username = ?, email = ? WHERE id_usuario = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('sssi', $nome, $username, $email, $user_id);
-    if ($stmt->execute()) {
-        // Atualiza a sessão com as novas informações
-        $_SESSION['user_name'] = $nome;
-        $_SESSION['message'] = "Informações atualizadas com sucesso!";
-        $_SESSION['message_class'] = 'success';
-        
-        // Redireciona para a mesma página para recarregar os dados atualizados
-        header("Location: config.php");
-        exit();
-    } else {
-        $_SESSION['message'] = "Erro ao atualizar informações.";
-        $_SESSION['message_class'] = 'error';
+    $canUpdate = true;
+
+    // Verificar se a senha atual está correta
+    if (!empty($current_password) && !empty($new_password) && !empty($confirm_new_password)) {
+        if (password_verify($current_password, $user['senha'])) {
+            // Verificar se a nova senha e a confirmação de senha são iguais
+            if ($new_password === $confirm_new_password) {
+                // Atualizar a senha no banco de dados
+                $new_password_hash = password_hash($new_password, PASSWORD_BCRYPT);
+                $sql = "UPDATE usuario SET senha = ? WHERE id_usuario = ?";
+                $stmt2 = $conn->prepare($sql);
+                $stmt2->bind_param('si', $new_password_hash, $user_id);
+                $stmt2->execute();
+                $stmt2->close();
+
+                $_SESSION['message'] = "Senha atualizada com sucesso!";
+                $_SESSION['message_class'] = 'success';
+            } else {
+                $_SESSION['message'] = "A nova senha e a confirmação de senha não coincidem.";
+                $_SESSION['message_class'] = 'error';
+                $canUpdate = false;
+            }
+        } else {
+            $_SESSION['message'] = "Senha atual incorreta.";
+            $_SESSION['message_class'] = 'error';
+            $canUpdate = false;
+        }
     }
-    $stmt->close();
-}
 
+
+    if ($canUpdate) {
+        $sql = "UPDATE usuario SET nome = ?, username = ?, email = ? WHERE id_usuario = ?";
+        $stmt3 = $conn->prepare($sql);
+        $stmt3->bind_param('sssi', $nome, $username, $email, $user_id);
+        if ($stmt3->execute()) {
+            $_SESSION['user_name'] = $nome;
+            $_SESSION['message'] = "Informações atualizadas com sucesso!";
+            $_SESSION['message_class'] = 'success';
+        } else {
+            $_SESSION['message'] = "Erro ao atualizar informações.";
+            $_SESSION['message_class'] = 'error';
+        }
+        $stmt3->close();
+    }
+
+    // Redireciona para a mesma página para recarregar os dados atualizados
+    header("Location: config.php");
+    exit();
+}
 
 $conn->close();
 
@@ -54,6 +86,7 @@ if (isset($_SESSION['message'])) {
     unset($_SESSION['message_class']);
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -90,7 +123,7 @@ if (isset($_SESSION['message'])) {
 
 <h1>Configurações de Conta</h1>
 
-<form action="config.php" method="POST">
+<form id="config-form" action="config.php" method="POST" onsubmit="return validateForm()">
     <div class="form-group">
         <label for="nome">Nome:</label>
         <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($user['nome']); ?>" required>
@@ -106,22 +139,79 @@ if (isset($_SESSION['message'])) {
         <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
     </div>
 
+    <div class="form-group">
+        <label for="current_password">Senha Atual:</label>
+        <div class="password-wrapper">
+            <input type="password" id="current_password" name="current_password">
+            <i class="fa fa-eye show-password" onclick="togglePasswordVisibility('current_password')"></i>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="new_password">Nova Senha:</label>
+        <div class="password-wrapper">
+            <input type="password" id="new_password" name="new_password">
+            <i class="fa fa-eye show-password" onclick="togglePasswordVisibility('new_password')"></i>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="confirm_new_password">Confirmar Nova Senha:</label>
+        <div class="password-wrapper">
+            <input type="password" id="confirm_new_password" name="confirm_new_password">
+            <i class="fa fa-eye show-password" onclick="togglePasswordVisibility('confirm_new_password')"></i>
+        </div>
+        <div id="error-message" class="message-box error" style="display:none;">
+    <p></p>
+</div>
+    </div>
+
     <button type="submit">Salvar Alterações</button>
 </form>
 
 <?php if (!empty($message)): ?>
-    <div class="message-box <?php echo $messageClass; ?>">
+    <div class="message-box <?php echo $messageClass; ?>" id="message-box">
         <p><?php echo $message; ?></p>
     </div>
 <?php endif; ?>
 
 <script>
+   
     setTimeout(function() {
-        const messageBox = document.querySelector('.message-box');
+        const messageBox = document.getElementById('message-box');
         if (messageBox) {
-            messageBox.style.display = 'none';
+            messageBox.style.display = 'none'; 
         }
     }, 3000);
+    function togglePasswordVisibility(fieldId) {
+        const passwordField = document.getElementById(fieldId);
+        const showPasswordIcon = passwordField.nextElementSibling;
+        
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            showPasswordIcon.classList.replace("fa-eye", "fa-eye-slash");
+        } else {
+            passwordField.type = "password";
+            showPasswordIcon.classList.replace("fa-eye-slash", "fa-eye");
+        }
+    }
+    function validateForm() {
+    const currentPassword = document.getElementById("current_password").value;
+    const newPassword = document.getElementById("new_password").value;
+    const confirmNewPassword = document.getElementById("confirm_new_password").value;
+    const errorMessageDiv = document.getElementById("error-message");
+    
+    // Limpar qualquer mensagem anterior
+    errorMessageDiv.style.display = 'none';
+    
+    if (newPassword !== confirmNewPassword) {
+        errorMessageDiv.querySelector('p').textContent = "A nova senha e a confirmação de senha não coincidem.";
+        errorMessageDiv.style.display = 'block'; // Exibe a div com a mensagem de erro
+        return false; // Impede o envio do formulário
+    }
+
+    return true;
+}
 </script>
 </body>
 </html>

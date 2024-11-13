@@ -1,0 +1,8 @@
+{
+    "name": "gabriel/tcc",
+    "require": {
+        "mercadopago/sdk": "^2.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
