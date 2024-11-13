@@ -59,8 +59,13 @@
     z-index: 2;
 }
 
-#banner img { 
-    height: 100%;
-    width: fit-content;
+#banner img {
+    width: 38vw; 
+    height: auto; 
+    border-radius: 18px; 
+    box-shadow: 10px 10px 20px rgba(255, 165, 0, 0.7);
+    margin-left: auto;
+    margin-right: 0;
+    display: block;
 }
 

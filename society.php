@@ -145,6 +145,26 @@ session_start();
     color: #555; 
 }
 
+.modal-detail {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.modal-detail i {
+    margin-right: 10px;
+    color: #4CAF50; 
+}
+
+.modal-detail p {
+    margin: 0;
+    font-size: 16px;
+}
+
+#modal-avaliacao-estrelas {
+    color: #FFD700; 
+}
+
     </style>
 </head>
 <body>
@@ -201,35 +221,65 @@ session_start();
 
       
 </header>
-
+<h1>Centros Esportivos</h1>
 <div class="quadras-container">
     <div class="quadra">
         <img src="img/society.jpg" alt="Quadra Society 1" class="foto">
         <div class="detalhes">
-            <h2 class="nome">Quadra Society 1</h2>
-            <p>Endereço: Rua Exemplo, 123</p>
-            <p>Valor: R$100/hora</p>
-            <button class="ver-mais" data-nome="Quadra Society 1" data-endereco="Rua Exemplo, 123" data-valor="R$ 100/hora" data-imagem="img/society.jpg">Ver mais</button>
+            <h2 class="nome">BROTOLÂNDIA CLUBE</h2>
+            <div class="info">
+                <i class="fa-solid fa-location-dot"></i>
+                <p> Endereço: R. João Olivo - Rio Maina, Criciúma - SC, 88806-813</p>
+            </div>
+            <div class="info">
+                <i class="fa-solid fa-money-bill-wave"></i>
+                <p>Valor: R$100,00/h</p>
+            </div>
+            <div class="info">
+                <i class="fa-solid fa-star"></i>
+                <p>Avaliações: <span class="avaliacao">★★★★☆</span>(59 avaliações)</p>
+            </div>
+            <button class="ver-mais" data-nome="BROTOLÂNDIA CLUBE" data-endereco="Rua Exemplo, 123" data-valor="R$ 100,00/h" data-imagem="img/society.jpg">Ver mais</button>
         </div>
     </div>
 
     <div class="quadra">
-        <img src="img/society.jpg" alt="Quadra Society 2" class="foto">
+        <img src="img/resenha.png" alt="Quadra Society 2" class="foto">
         <div class="detalhes">
-            <h2 class="nome">Quadra Society 2</h2>
-            <p>Endereço: Rua Exemplo, 456</p>
-            <p>Valor: R$ 120/hora</p>
-            <button class="ver-mais" data-nome="Quadra Society 2" data-endereco="Rua Exemplo, 456" data-valor="R$ 120/hora" data-imagem="img/society.jpg">Ver mais</button>
+            <h2 class="nome">RESENHA DA BOLA</h2>
+            <div class="info">
+                <i class="fa-solid fa-location-dot"></i>
+                <p> Endereço: Av. Centenário, 500 - Pinheirinho, Criciúma - SC, 88804-000</p>
+            </div>
+            <div class="info">
+                <i class="fa-solid fa-money-bill-wave"></i>
+                <p>Valor: R$140,00/h</p>
+            </div>
+            <div class="info">
+                <i class="fa-solid fa-star"></i>
+                <p>Avaliações: <span class="avaliacao">★★★☆☆</span>(77 avaliações)</p>
+            </div>
+            <button class="ver-mais" data-nome="RESENHA DA BOLA" data-endereco="Rua Exemplo, 456" data-valor="R$ 140,00/h" data-imagem="img/society.jpg">Ver mais</button>
         </div>
     </div>
 
     <div class="quadra">
-        <img src="img/society.jpg" alt="Quadra Society 3" class="foto">
+        <img src="img/angeloni.jpg" alt="Quadra Society 3" class="foto">
         <div class="detalhes">
-            <h2 class="nome">Quadra Society 3</h2>
-            <p>Endereço: Rua Exemplo, 789</p>
-            <p>Valor: R$ 150/hora</p>
-            <button class="ver-mais" data-nome="Quadra Society 3" data-endereco="Rua Exemplo, 789" data-valor="R$ 150/hora" data-imagem="img/society.jpg">Ver mais</button>
+            <h2 class="nome">ASSOCIAÇÃO ANGELONI</h2>
+            <div class="info">
+                <i class="fa-solid fa-location-dot"></i>
+                <p> Endereço: 397, R. Rubéns Nunes Albino, 239 - Pres. Vargas, Içara - Estado ng Santa Catarina, 88820-000</p>
+            </div>
+            <div class="info">
+                <i class="fa-solid fa-money-bill-wave"></i>
+                <p>Valor: R$125,00/h</p>
+            </div>
+            <div class="info">
+                <i class="fa-solid fa-star"></i>
+                <p>Avaliações: <span class="avaliacao">★★★★★</span>(29 avaliações)</p>
+            </div>
+            <button class="ver-mais" data-nome="ASSOCIAÇÃO ANGELONI" data-endereco="Rua Exemplo, 789" data-valor="R$ 125,00/h" data-imagem="img/society.jpg">Ver mais</button>
         </div>
     </div>
 </div>
@@ -238,24 +288,36 @@ session_start();
     <div class="modal-content">
         <span class="close">&times;</span>
         
-       
         <div class="swiper-container modal-image">
             <div class="swiper-wrapper">
-               
                 <div class="swiper-slide"><img src="img/society.jpg" alt="Imagem 1"></div>
                 <div class="swiper-slide"><img src="img/futsalquad.jpg" alt="Imagem 2"></div>
                 <div class="swiper-slide"><img src="img/futsalsociety.jpg" alt="Imagem 3"></div>
             </div>
-          
             <div class="swiper-button-next"></div>
             <div class="swiper-button-prev"></div>
         </div>
 
-      
         <div class="modal-info">
             <h2 id="modal-nome">Detalhes da Quadra</h2>
-            <p id="modal-endereco"></p>
-            <p id="modal-valor"></p>
+            
+            <!-- Endereço com ícone -->
+            <div class="modal-detail">
+                <i class="fa-solid fa-location-pin"></i>
+                <p id="modal-endereco"></p>
+            </div>
+            
+            <!-- Valor com ícone -->
+            <div class="modal-detail">
+                <i class="fa-solid fa-dollar-sign"></i>
+                <p id="modal-valor"></p>
+            </div>
+
+            <!-- Novas informações sobre avaliações -->
+            <div class="modal-detail">
+                <i class="fa-solid fa-star"></i>
+                <p id="modal-avaliacoes">Avaliações: <span id="modal-avaliacao-estrelas">★★★★☆</span></p>
+            </div>
 
             <div class="horarios">
                 <h3>Horários:</h3>
@@ -275,6 +337,7 @@ session_start();
         </div>
     </div>
 </div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var sidebar = document.getElementById('sidebar');

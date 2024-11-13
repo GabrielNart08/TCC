@@ -78,14 +78,13 @@ session_start();
                     <span>facilidade!</span>
                 </h1>
                 <p class="descricao">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-                    Quisque sed aliquam est, tincidunt mollis eros. Ut sit amet lacinia urna. 
+                Encontre a quadra ideal para o seu jogo e faça sua reserva rapidamente, com praticidade e flexibilidade para escolher o melhor horário!
                 </p>
 
                 <div id="cta_button">
                     <a href="quadras.php" id="btn-default">Ver Quadras</a>
-                    <a href="tel:+554899999-9999" id="phone">
-                        <button id="btn-default"><i class="fa-solid fa-phone"></i></button>(48)99999-9999
+                    <a href="tel:+554899856-6251" id="phone">
+                        <button id="btn-default"><i class="fa-solid fa-phone"></i></button>(48)99856-6251
                     </a>
                 </div>
 
@@ -103,7 +102,7 @@ session_start();
             </div>
 
             <div id="banner">
-                <img src="img/telaprincipal1.png" alt="principal">
+                <img src="img/inicio.jpg" alt="principal">
             </div>
         </section>
     </main>

@@ -78,10 +78,10 @@ session_start();
     <div class="item">
         <a href="society.php"> 
             <div class="image-container">
-                <img src="img/futsalsociety.jpg" alt="society">
+                <img src="img/societyquad.jpg" alt="society">
                 <div class="overlay">
                     <h3>Quadra de Society</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p>Perfeita para jogos entre amigos, com espaço amplo e gramado sintético de qualidade.</p>
                 </div>
             </div>
         </a>
@@ -92,7 +92,7 @@ session_start();
                 <img src="img/futsalquad.jpg" alt="futsal">
                 <div class="overlay">
                     <h3>Quadra de Futsal</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <p>Ambiente fechado e piso ideal para jogadas rápidas e emocionantes partidas de futsal.</p>
                 </div>
             </div>
         </a>
