@@ -1,79 +1,61 @@
 <?php
-// Conectar ao banco de dados
-include('conexao.php');
+// Verificar se o usuário está logado como administrador
+session_start();
 
+
+// Conexão com o banco de dados
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "reservaquadras";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Conexão falhou: " . $conn->connect_error);
+}
+
+// Processar o cadastro de quadra
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Receber os dados do formulário
     $nome = $_POST['nome'];
     $endereco = $_POST['endereco'];
-    $tipo = $_POST['tipo'];
     $preco = $_POST['preco'];
-    $imagens = $_FILES['imagens'];
+    $imagem = $_FILES['imagem']['name'];
+    $horarios = $_POST['horarios'];
 
-    // Lógica para salvar imagens (pode ser adaptada conforme necessidade)
-    $imagensString = "";
-    foreach ($imagens['tmp_name'] as $key => $tmp_name) {
-        $nomeImagem = $imagens['name'][$key];
-        $caminhoImagem = "uploads/" . $nomeImagem;
-        move_uploaded_file($tmp_name, $caminhoImagem);
-        $imagensString .= $caminhoImagem . ",";
-    }
+    // Upload da imagem
+    $target_dir = "img/";
+    $target_file = $target_dir . basename($_FILES["imagem"]["name"]);
+    move_uploaded_file($_FILES["imagem"]["tmp_name"], $target_file);
 
-    // Receber horários como JSON
-    $horarios = [];
-    foreach ($_POST['horarios'] as $horario) {
-        list($inicio, $fim) = explode('-', $horario);
-        $horarios[] = ['inicio' => $inicio, 'fim' => $fim];
-    }
-    $horariosJson = json_encode($horarios); // Convertendo para JSON
-
-    // Inserir dados no banco de dados
-    $sql = "INSERT INTO quadra (nome, endereco, tipo, preco, imagens, horarios)
-            VALUES ('$nome', '$endereco', '$tipo', '$preco', '$imagensString', '$horariosJson')";
-
+    // Inserir no banco de dados
+    $sql = "INSERT INTO quadra (nome, endereco, preco, imagem, horarios, id_usuario) VALUES ('$nome', '$endereco', '$preco', '$imagem', '$horarios', '{$_SESSION['user_id']}')";
     if ($conn->query($sql) === TRUE) {
         echo "Quadra cadastrada com sucesso!";
     } else {
         echo "Erro ao cadastrar quadra: " . $conn->error;
     }
 }
+
+$conn->close();
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar Quadra</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="form-container">
-        <h1>Cadastrar Quadra</h1>
-        <form action="cadastro_quadras.php" method="POST" enctype="multipart/form-data">
-            <label for="nome">Nome da Quadra:</label>
-            <input type="text" id="nome" name="nome" required>
-
-            <label for="endereco">Endereço:</label>
-            <input type="text" id="endereco" name="endereco" required>
-
-            <label for="tipo">Tipo da Quadra:</label>
-            <select id="tipo" name="tipo">
-                <option value="futsal">Futsal</option>
-                <option value="society">Society</option>
-            </select>
-
-            <label for="preco">Preço:</label>
-            <input type="number" id="preco" name="preco" step="0.01" required>
-
-            <label for="imagens">Imagens (selecione múltiplas):</label>
-            <input type="file" id="imagens" name="imagens[]" multiple>
-
-            <label for="horarios">Horários Disponíveis (formato: 19:00-20:00):</label>
-            <input type="text" id="horarios" name="horarios[]" required>
-
-            <button type="submit">Cadastrar Quadra</button>
-        </form>
-    </div>
-</body>
-</html>
+<!-- Formulário de Cadastro -->
+<h2>Cadastrar Nova Quadra</h2>
+<form action="quadras.php" method="POST" enctype="multipart/form-data">
+    <label for="nome">Nome da Quadra:</label>
+    <input type="text" id="nome" name="nome" required><br><br>
+    
+    <label for="endereco">Endereço:</label>
+    <input type="text" id="endereco" name="endereco" required><br><br>
+    
+    <label for="preco">Preço (por hora):</label>
+    <input type="text" id="preco" name="preco" required><br><br>
+    
+    <label for="imagem">Imagem da Quadra:</label>
+    <input type="file" id="imagem" name="imagem" required><br><br>
+    
+    <label for="horarios">Horários Disponíveis:</label>
+    <textarea id="horarios" name="horarios" rows="4" cols="50" required></textarea><br><br>
+    
+    <button type="submit">Cadastrar Quadra</button>
+</form>
