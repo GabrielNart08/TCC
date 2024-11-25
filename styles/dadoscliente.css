@@ -1,0 +1,167 @@
+/* Reset básico */
+* {
+    font-family: "Poppins", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+  
+  body {
+    font-family: "Poppins", sans-serif;
+    background-color: lightyellow;
+    color: #333; /* Cor do texto */
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* Container principal */
+  form {
+    background-color: #fff; 
+    border-radius: 8px;
+    padding: 30px;
+    width: 100%;
+    max-width: 900px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Título */
+  form h3 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #1d1d1d; 
+    margin-top: 60px; /* Adiciona o espaçamento superior */
+  }
+  
+  /* Form Row: Divisão de colunas */
+  .form-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .form-column {
+    width: 48%; /* Cada coluna ocupa 48% da largura total */
+  }
+  
+  /* Labels */
+  label {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 8px;
+    display: block;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+  
+  /* Campos de input */
+  input[type="text"],
+  input[type="date"],
+  input[type="email"],
+  input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  input[type="text"]:focus,
+  input[type="date"]:focus,
+  input[type="email"]:focus,
+  input[type="number"]:focus {
+    border-color: #4CAF50; /* Cor de borda quando o campo estiver focado */
+    outline: none;
+  }
+  
+  /* Botões de ação */
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  button[type="submit"] {
+    width: 48%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: #fff;
+    font-size: 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #45a049; /* Cor do botão quando passar o mouse */
+  }
+  
+  /* Estilos para o botão "Voltar" */
+.btn-voltar {
+    background-color: red; /* Cor de fundo vermelha */
+    color: white; /* Cor do texto branca */
+    font-size: 16px; /* Tamanho da fonte */
+    padding: 10px 20px; /* Espaçamento interno */
+    border: none; /* Remove a borda */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Mostra o cursor de "mãozinha" ao passar o mouse */
+    text-align: center; /* Centraliza o texto */
+    display: inline-block; /* Permite o botão ocupar o tamanho necessário */
+    margin-top: 20px; /* Espaçamento superior */
+    transition: background-color 0.3s; /* Efeito suave para a troca de cor */
+  }
+  
+  .btn-voltar:hover {
+    background-color: darkred; /* Cor de fundo ao passar o mouse */
+  }
+  
+  
+  .btn-voltar:hover {
+    background-color: #e53935; /* Cor do botão Voltar quando passar o mouse */
+  }
+  
+  /* Estilos de responsividade */
+  @media screen and (max-width: 600px) {
+    .form-row {
+      flex-direction: column; /* Em telas pequenas, os campos ficam empilhados */
+    }
+  
+    .form-column {
+      width: 100%; /* Cada coluna ocupa 100% da largura */
+    }
+  
+    button[type="submit"],
+    .btn-voltar {
+      font-size: 16px;
+      width: 100%; /* Botões ocupam 100% da largura em telas pequenas */
+    }
+  }
+
+.alert {
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 5px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.success {
+  background-color: #28a745;
+  color: white;
+}
+
+.error {
+  background-color: #dc3545;
+  color: white;
+}
+
+  

@@ -237,9 +237,9 @@ session_start();
             </div>
             <div class="info">
                 <i class="fa-solid fa-star"></i>
-                <p>Avaliações: <span class="avaliacao">★★★★☆</span>(59 avaliações)</p>
+                <p>Avaliações: <span class="avaliacao">☆☆☆☆☆</span>(0 avaliações)</p>
             </div>
-            <button class="ver-mais" data-nome="BROTOLÂNDIA CLUBE" data-endereco="Rua Exemplo, 123" data-valor="R$ 100,00/h" data-imagem="img/society.jpg">Ver mais</button>
+            <button class="ver-mais" data-target="#modal-brotolandia">Ver mais</button>
         </div>
     </div>
 
@@ -257,9 +257,9 @@ session_start();
             </div>
             <div class="info">
                 <i class="fa-solid fa-star"></i>
-                <p>Avaliações: <span class="avaliacao">★★★☆☆</span>(77 avaliações)</p>
+                <p>Avaliações: <span class="avaliacao">☆☆☆☆☆</span>(0 avaliações)</p>
             </div>
-            <button class="ver-mais" data-nome="RESENHA DA BOLA" data-endereco="Rua Exemplo, 456" data-valor="R$ 140,00/h" data-imagem="img/society.jpg">Ver mais</button>
+            <button class="ver-mais" data-target="#modal-resenha">Ver mais</button>
         </div>
     </div>
 
@@ -277,17 +277,16 @@ session_start();
             </div>
             <div class="info">
                 <i class="fa-solid fa-star"></i>
-                <p>Avaliações: <span class="avaliacao">★★★★★</span>(29 avaliações)</p>
+                <p>Avaliações: <span class="avaliacao">☆☆☆☆☆</span>(0 avaliações)</p>
             </div>
-            <button class="ver-mais" data-nome="ASSOCIAÇÃO ANGELONI" data-endereco="Rua Exemplo, 789" data-valor="R$ 125,00/h" data-imagem="img/society.jpg">Ver mais</button>
+            <button class="ver-mais" data-target="#modal-angeloni">Ver mais</button>
         </div>
     </div>
 </div>
 
-<div id="myModal" class="modal">
+<div id="modal-brotolandia" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-        
         <div class="swiper-container modal-image">
             <div class="swiper-wrapper">
                 <div class="swiper-slide"><img src="img/society.jpg" alt="Imagem 1"></div>
@@ -304,19 +303,77 @@ session_start();
             <!-- Endereço com ícone -->
             <div class="modal-detail">
                 <i class="fa-solid fa-location-pin"></i>
+                Endereço: R. João Olivo - Rio Maina, Criciúma - SC, 88806-813
                 <p id="modal-endereco"></p>
             </div>
             
             <!-- Valor com ícone -->
             <div class="modal-detail">
                 <i class="fa-solid fa-dollar-sign"></i>
+                R$100,00/hora
                 <p id="modal-valor"></p>
             </div>
 
             <!-- Novas informações sobre avaliações -->
             <div class="modal-detail">
                 <i class="fa-solid fa-star"></i>
-                <p id="modal-avaliacoes">Avaliações: <span id="modal-avaliacao-estrelas">★★★★☆</span></p>
+                <p id="modal-avaliacoes">Avaliações: <span id="modal-avaliacao-estrelas">☆☆☆☆☆</span>(0 avaliações)</p>
+            </div>
+
+            <div class="horarios">
+                <h3>Horários:</h3>
+                <div class="horario-intervalo">
+                    <span>18:00 - 19:00</span> 
+                    <a href="dadoscliente.php?id=1" class="botao-reservar">Reservar</a>
+                </div>
+                <div class="horario-intervalo">
+                    <span>19:00 - 20:00</span> 
+                    <button class="reservar-btn-horario" data-horario="19:00 - 20:00">Reservar</button>
+                </div>
+                <div class="horario-intervalo">
+                    <span>20:00 - 21:00</span> 
+                    <button class="reservar-btn-horario" data-horario="20:00 - 21:00">Reservar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div id="modal-resenha" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="swiper-container modal-image">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="img/resenha.png" alt="Imagem 1"></div>
+                <div class="swiper-slide"><img src="img/futsalquad.jpg" alt="Imagem 2"></div>
+                <div class="swiper-slide"><img src="img/futsalsociety.jpg" alt="Imagem 3"></div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+
+        <div class="modal-info">
+            <h2 id="modal-nome">Detalhes da Quadra</h2>
+            
+            <!-- Endereço com ícone -->
+            <div class="modal-detail">
+                <i class="fa-solid fa-location-pin"></i>
+                Endereço: Av. Centenário, 500 - Pinheirinho, Criciúma - SC, 88804-000
+                <p id="modal-endereco"></p>
+            </div>
+            
+            <!-- Valor com ícone -->
+            <div class="modal-detail">
+                <i class="fa-solid fa-dollar-sign"></i>
+                R$140,00/hora
+                <p id="modal-valor"></p>
+            </div>
+
+            <!-- Novas informações sobre avaliações -->
+            <div class="modal-detail">
+                <i class="fa-solid fa-star"></i>
+                <p id="modal-avaliacoes">Avaliações: <span id="modal-avaliacao-estrelas">☆☆☆☆☆</span>(0 avaliações)</p>
             </div>
 
             <div class="horarios">
@@ -336,24 +393,97 @@ session_start();
             </div>
         </div>
     </div>
+    </div>
 </div>
+
+<div id="modal-angeloni" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="swiper-container modal-image">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="img/angeloni.jpg" alt="Imagem 1"></div>
+                <div class="swiper-slide"><img src="img/futsalquad.jpg" alt="Imagem 2"></div>
+                <div class="swiper-slide"><img src="img/futsalsociety.jpg" alt="Imagem 3"></div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+
+        <div class="modal-info">
+            <h2 id="modal-nome">Detalhes da Quadra</h2>
+            
+            <!-- Endereço com ícone -->
+            <div class="modal-detail">
+                <i class="fa-solid fa-location-pin"></i>
+                Endereço: 397, R. Rubéns Nunes Albino, 239 - Pres. Vargas, Içara - Estado ng Santa Catarina, 88820-000
+                <p id="modal-endereco"></p>
+            </div>
+            
+            <!-- Valor com ícone -->
+            <div class="modal-detail">
+                <i class="fa-solid fa-dollar-sign"></i>
+                R$125,00/hora
+                <p id="modal-valor"></p>
+            </div>
+
+            <!-- Novas informações sobre avaliações -->
+            <div class="modal-detail">
+                <i class="fa-solid fa-star"></i>
+                <p id="modal-avaliacoes">Avaliações: <span id="modal-avaliacao-estrelas">☆☆☆☆☆</span>(0 avaliações)</p>
+            </div>
+
+            <div class="horarios">
+                <h3>Horários:</h3>
+                <div class="horario-intervalo">
+                    <span>18:00 - 19:00</span> 
+                    <button class="reservar-btn-horario" data-horario="18:00 - 19:00">Reservar</button>
+                </div>
+                <div class="horario-intervalo">
+                    <span>19:00 - 20:00</span> 
+                    <button class="reservar-btn-horario" data-horario="19:00 - 20:00">Reservar</button>
+                </div>
+                <div class="horario-intervalo">
+                    <span>20:00 - 21:00</span> 
+                    <button class="reservar-btn-horario" data-horario="20:00 - 21:00">Reservar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var sidebar = document.getElementById('sidebar');
     var profileIcon = document.getElementById('profile-icon');
     var closeButton = document.getElementById('close-sidebar');
-    var modal = document.getElementById("myModal");
     var btns = document.querySelectorAll(".ver-mais");
+    var modals = document.querySelectorAll(".modal");
     var span = document.getElementsByClassName("close")[0];
     var swiper;
 
-    btns.forEach(function(btn) {
-        btn.onclick = function() {
-            modal.style.display = "block";
-            document.getElementById("modal-nome").innerText = this.getAttribute("data-nome");
-            document.getElementById("modal-endereco").innerText = "Endereço: " + this.getAttribute("data-endereco");
-            document.getElementById("modal-valor").innerText = "Valor: " + this.getAttribute("data-valor");
+    btns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            var targetModal = document.querySelector(this.getAttribute("data-target"));
+            targetModal.style.display = "block";
+        });
+    });
+
+    // Fechar os modais
+    modals.forEach(function (modal) {
+        var closeBtn = modal.querySelector(".close");
+        closeBtn.addEventListener("click", function () {
+            modal.style.display = "none";
+        });
+
+        window.addEventListener("click", function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    });
+
 
             
             if (swiper) {
@@ -366,8 +496,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 loop: true, 
             });
-        }
-    });
+        
 
     sidebar.style.width = '0';
 
@@ -400,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var valor = document.getElementById("modal-valor").innerText;
 
             // Redireciona para a página de pagamento com os detalhes do horário selecionado
-            window.location.href = `pagamento.php?quadra=${encodeURIComponent(quadraNome)}&horario=${encodeURIComponent(horario)}&valor=${encodeURIComponent(valor)}`;
+            window.location.href = `dadoscliente.php?quadra=${encodeURIComponent(quadraNome)}&horario=${encodeURIComponent(horario)}&valor=${encodeURIComponent(valor)}`;
         };
     });
 });
