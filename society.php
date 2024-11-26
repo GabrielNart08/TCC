@@ -18,8 +18,6 @@ if ($conn->connect_error) {
 $sql = "SELECT id_quadra, nome, endereco, preco, imagem, horarios, id_usuario FROM quadra";
 $result = $conn->query($sql);
 
-// Fechar a conexão com o banco de dados
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -37,6 +35,46 @@ $conn->close();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>Aluguel de Quadras Esportivas</title>
     <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+*{
+    font-family: 'Poppins', sans-serif;
+}
+.horario-intervalo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 8px;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.horario-intervalo:hover {
+    background-color: #e0e0e0;
+}
+
+.reservar-btn-horario {
+    padding: 5px 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.reservar-btn-horario:hover {
+    background-color: #0056b3;
+}
+
+.reservar-btn-horario:active {
+    background-color: #004080;
+}
+
        
 .modal {
     display: none;
@@ -184,6 +222,38 @@ $conn->close();
     color: #FFD700; 
 }
 
+/* Estilo para o botão */
+.btn-selecionar-dia {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-selecionar-dia:hover {
+    background-color: #0056b3;
+}
+
+.lista-dias {
+    display: none;  /* Esconde a lista por padrão */
+}
+
+.lista-dias.show {
+    display: block;  /* Exibe a lista quando a classe 'show' é adicionada */
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+
     </style>
 </head>
 <body>
@@ -202,11 +272,33 @@ $conn->close();
             <?php endif; ?>
         </div>
         <div id="user-section">
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <i class="fa-regular fa-user" id="profile-icon"></i>
-            <?php endif; ?>
-        </div>
+                <?php if (isset($_SESSION['user_id'])): ?>
+
+                    <i class="fa-regular fa-user" id="profile-icon"></i>
+                <?php endif; ?>
+            </div>
     </nav>
+    
+    <div id="sidebar">
+    <div id="sidebar-header">
+        <button id="close-sidebar">&times;</button>
+    </div>
+    <div id="sidebar-content">
+        <div id="profile-section">
+        <h2 id="user-name">
+    <span style="color: white;">Bem-Vindo,</span>
+    <span style="color: green;"><?php echo isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : ""; ?></span>
+</h2>
+        </div>
+        <div id="settings-section">
+            <a href="config.php">Configurações</a>
+            <br>
+            <a href="logout.php">Sair</a>
+        </div>
+    </div>
+</div>
+
+      
 </header>
 
 <h1>Centros Esportivos</h1>
@@ -258,23 +350,27 @@ $conn->close();
                         </div>
                         <div class="modal-detail">
                             <i class="fa-solid fa-star"></i>
-                            Avaliações: 
+                            Avaliações:
                         </div>
-                        <div class="horarios">
-                            <h3>Horários:</h3>
-                            <!-- Aqui você pode ajustar conforme necessário para adicionar horários dinâmicos -->
-                            <div class="horario-intervalo">
-                                <span>18:00 - 19:00</span>
-                                <button class="reservar-btn-horario" data-horario="18:00 - 19:00">Reservar</button>
-                            </div>
-                            <div class="horario-intervalo">
-                                <span>19:00 - 20:00</span>
-                                <button class="reservar-btn-horario" data-horario="19:00 - 20:00">Reservar</button>
-                            </div>
-                            <div class="horario-intervalo">
-                                <span>20:00 - 21:00</span>
-                                <button class="reservar-btn-horario" data-horario="20:00 - 21:00">Reservar</button>
-                            </div>
+                        <div>
+                        <button id="btn-selecionar-dia-<?= $row['id_quadra']; ?>" class="btn-selecionar-dia" data-quadra="<?= $row['id_quadra']; ?>">Selecionar Dia</button>
+
+                            <select id="seletorDia-<?= $row['id_quadra']; ?>" class="seletorDia" style="display: none;">
+                                <option value="Segunda">Segunda-feira</option>
+                                <option value="Terça">Terça-feira</option>
+                                <option value="Quarta">Quarta-feira</option>
+                                <option value="Quinta">Quinta-feira</option>
+                                <option value="Sexta">Sexta-feira</option>
+                                <option value="Sábado">Sábado</option>
+                                <option value="Domingo">Domingo</option>
+                            </select>
+                        </div>
+
+
+                        <!-- Exibição dos horários -->
+                        <div id="horariosDisponiveis-<?= $row['id_quadra']; ?>" style="display: none;">
+                            <h3>Horários Disponíveis:</h3>
+                            <ul id="listaHorarios-<?= $row['id_quadra']; ?>"></ul>
                         </div>
                     </div>
                 </div>
@@ -286,43 +382,182 @@ $conn->close();
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var modals = document.querySelectorAll(".modal");
-        var closeBtns = document.querySelectorAll(".close");
+document.addEventListener('DOMContentLoaded', function() {
+    // Abrir e fechar sidebar
+    var sidebar = document.getElementById('sidebar');
+    var profileIcon = document.getElementById('profile-icon');
+    var closeButton = document.getElementById('close-sidebar');
 
-        // Fechar modal ao clicar no botão "fechar"
-        closeBtns.forEach(function(btn) {
-            btn.addEventListener("click", function() {
-                var modal = this.closest(".modal");
-                modal.style.display = "none";
-            });
-        });
+    sidebar.style.width = '0';
 
-        // Fechar modal ao clicar fora dele
-        window.addEventListener("click", function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = "none";
-            }
-        });
+    function openSidebar() {
+        sidebar.style.width = '250px';
+    }
 
-        // Iniciar o swiper para as imagens no modal
-        var swiper = new Swiper('.swiper-container', {
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-        });
+    function closeSidebar() {
+        sidebar.style.width = '0';
+    }
 
-        // Exibir o modal ao clicar no botão "Ver mais"
-        var btns = document.querySelectorAll('.ver-mais');
-        btns.forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                var targetModal = document.querySelector(this.getAttribute("data-target"));
-                targetModal.style.display = "block";
-            });
+     
+
+
+    profileIcon.addEventListener('click', openSidebar);
+    closeButton.addEventListener('click', closeSidebar);
+
+    // Modal de Detalhes da Quadra
+    var modals = document.querySelectorAll(".modal");
+    var closeBtns = document.querySelectorAll(".close");
+
+    closeBtns.forEach(function(btn) {
+        btn.addEventListener("click", function() {
+            var modal = this.closest(".modal");
+            modal.style.display = "none";
         });
     });
+
+    window.addEventListener("click", function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = "none";
+        }
+    });
+
+    // Iniciar Swiper para as imagens no modal
+    var swiper = new Swiper('.swiper-container', {
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+
+    // Exibir o modal ao clicar no botão "Ver mais"
+    var btns = document.querySelectorAll('.ver-mais');
+    btns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var targetModal = document.querySelector(this.getAttribute("data-target"));
+            targetModal.style.display = "block";
+        });
+    });
+
+    // Exibir seletor de dia e carregar horários
+    document.querySelectorAll('.ver-mais').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const targetModal = document.querySelector(event.target.getAttribute('data-target'));
+            const idQuadra = targetModal.id.split('-')[1]; // Extrai o id da quadra
+
+            // Lógica do botão Selecionar Dia
+            const btnSelecionarDia = document.getElementById(`btn-selecionar-dia-${idQuadra}`);
+            const seletorDia = document.getElementById(`seletorDia-${idQuadra}`);
+            const horariosDisponiveisDiv = document.getElementById(`horariosDisponiveis-${idQuadra}`);
+            const listaHorarios = document.getElementById(`listaHorarios-${idQuadra}`);
+
+            // Mostrar/Esconder seletor de dia
+            btnSelecionarDia.addEventListener('click', function() {
+                if (seletorDia.style.display === 'none' || seletorDia.style.display === '') {
+                    seletorDia.style.display = 'block';
+                } else {
+                    seletorDia.style.display = 'none';
+                }
+            });
+
+           // Quando o dia for selecionado, faz a requisição para obter os horários
+seletorDia.addEventListener('change', function (event) {
+    const diaSelecionado = event.target.value;
+
+    // Fazendo a requisição AJAX para obter os horários
+    fetch(`get_horarios.php?id_quadra=${idQuadra}&dia_semana=${diaSelecionado}`)
+        .then(response => response.json())
+        .then(data => {
+            // Limpar lista de horários
+            listaHorarios.innerHTML = '';
+
+            // Adicionar horários na lista
+            if (data.horarios && data.horarios.length > 0) {
+                data.horarios.forEach(horario => {
+                    const li = document.createElement('li');
+                    li.classList.add('horario-intervalo');
+                    li.innerHTML = `
+                        ${horario.hora_inicio} - ${horario.hora_fim}
+                        <button class="reservar-btn-horario" 
+                            data-id-horario="${horario.id_horario}" 
+                            data-id-quadra="${data.id_quadra}">Reservar</button>`;
+                    listaHorarios.appendChild(li);
+                });
+            } else {
+                listaHorarios.innerHTML = '<li>Não há horários disponíveis.</li>';
+            }
+
+            // Exibir a div com os horários disponíveis
+            horariosDisponiveisDiv.style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Erro ao buscar horários:', error);
+        });
+});
+        });
+    });
+});
+
+
+document.addEventListener('click', function (event) {
+    // Verifica se o clique foi em um botão com a classe '.reservar-btn-horario'
+    if (event.target.classList.contains('reservar-btn-horario')) {
+        const idHorario = event.target.getAttribute('data-id-horario'); // Obtém o id do horário
+        const idQuadra = event.target.getAttribute('data-id-quadra'); // Obtém o id da quadra
+
+        // Verifique se os dados estão corretos
+        console.log(`id_horario: ${idHorario}, id_quadra: ${idQuadra}`);
+
+        // Monta a URL para a página de dados do cliente
+        const urlReserva = `/TCC/dadoscliente.php?id_horario=${idHorario}&id_quadra=${idQuadra}`;
+
+        // Redireciona o usuário para a página de dados do cliente
+        window.location.href = urlReserva;
+    }
+});
+
+
+// Função para mostrar ou esconder a lista de dias
+document.querySelectorAll('.btn-selecionar-dia').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const idQuadra = this.id.split('-')[3]; // Pega o id_quadra da string do botão
+        const listaDias = document.getElementById(`listaDias-${idQuadra}`);
+
+        // Alterna a visibilidade da lista de dias
+        listaDias.classList.toggle('show');
+    });
+});
+
+// Atualizar o texto do botão com o dia selecionado
+document.querySelectorAll('.lista-dias li').forEach(item => {
+    item.addEventListener('click', function() {
+        const diaSelecionado = this.getAttribute('data-dia'); // Pega o dia selecionado
+        const idQuadra = this.parentElement.id.split('-')[1]; // Pega o id_quadra da string do id da lista
+        const btn = document.getElementById(`btn-selecionar-dia-${idQuadra}`);
+
+        // Atualiza o texto do botão com o valor do dia selecionado
+        btn.textContent = diaSelecionado;
+
+        // Esconde a lista de dias após a seleção
+        const listaDias = document.getElementById(`listaDias-${idQuadra}`);
+        listaDias.classList.remove('show');
+    });
+});
+
+// Fechar a lista de dias se o usuário clicar fora do botão ou da lista
+document.addEventListener('click', function(event) {
+    const isClickInside = event.target.closest('.btn-selecionar-dia') || event.target.closest('.lista-dias');
+    if (!isClickInside) {
+        document.querySelectorAll('.lista-dias').forEach(lista => {
+            lista.classList.remove('show');
+        });
+    }
+});
+
 </script>
 
 </body>
 </html>
+<?php
+// Fechar a conexão com o banco de dados ao final
+$conn->close();
+?>

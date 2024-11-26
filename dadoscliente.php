@@ -3,7 +3,19 @@
 include('conexao.php');
 session_start(); // Certifique-se de que a sessão está ativa para identificar o usuário logado
 
-// Verifica se o formulário foi enviado
+// Verificar se os parâmetros estão definidos
+if (isset($_GET['id_quadra']) && isset($_GET['id_horario'])) {
+  $id_quadra = $_GET['id_quadra'];
+  $id_horario = $_GET['id_horario'];
+
+  // Armazenar o id_quadra na sessão
+  $_SESSION['id_quadra'] = $id_quadra;
+  $_SESSION['id_horario'] = $id_horario; // Opcional, se necessário
+} else {
+  echo "Parâmetros inválidos!";
+  exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Recebe os dados do formulário
     $nome_completo = $_POST['nome_completo'];
@@ -17,7 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $estado = $_POST['estado'];
     $telefone = $_POST['telefone'];
     $id_quadra = $_SESSION['id_quadra']; 
-    $horario = $_SESSION['horario']; 
+    $horario = $id_horario;  // Usando o horário passado via GET
+
 
     // Inserir os dados na tabela `clientes`
     $query_cliente = "INSERT INTO clientes (nome_completo, email, data_nascimento, cpf, cep, rua, bairro, cidade, estado, telefone) 
@@ -28,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Inserir a reserva na tabela `reservas`
         $id_usuario = $_SESSION['user_id']; // Exemplo: ID do usuário logado
-        $query_reserva = "INSERT INTO reservas (id_usuario, id_cliente, id_quadra, horario) 
+        $query_reserva = "INSERT INTO reservas (id_usuario, id_cliente, id_quadra, id_horario) 
                           VALUES ('$id_usuario', '$id_cliente', '$id_quadra', '$horario')";
 
         if (mysqli_query($conn, $query_reserva)) {
