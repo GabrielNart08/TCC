@@ -1,7 +1,11 @@
 <?php
-// Verificar se o usuário está logado como administrador
 session_start();
 
+// Verifica se o usuário está logado como administrador
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
 
 // Conexão com o banco de dados
 $servername = "localhost";
@@ -14,69 +18,101 @@ if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-// Receber dados do formulário
-$nome = $_POST['nome'];
-$endereco = $_POST['endereco'];
-$preco = $_POST['preco'];
-$imagem = $_FILES['imagem']['name'];
-$horarios = $_POST['dias'];  // Array de dias
-$hora_inicio = $_POST['hora_inicio'];  // Array de horas de início
-$hora_fim = $_POST['hora_fim'];  // Array de horas de fim
+// Variável para verificar se o cadastro foi bem-sucedido
+$cadastro_sucesso = false; 
 
-// Upload da imagem
-$target_dir = "img/";
-$target_file = $target_dir . basename($_FILES["imagem"]["name"]);
-move_uploaded_file($_FILES["imagem"]["tmp_name"], $target_file);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Dados da quadra
+    $nome = $_POST['nome'];
+    $endereco = $_POST['endereco'];
+    $preco = $_POST['preco'];
+    $imagem = $_FILES['imagem']['name'];
 
-// Inserir quadra
-$sql = "INSERT INTO quadra (nome, endereco, preco, imagem, id_usuario) VALUES ('$nome', '$endereco', '$preco', '$imagem', '{$_SESSION['user_id']}')";
-if ($conn->query($sql) === TRUE) {
-    $id_quadra = $conn->insert_id;  // ID da quadra inserida
-
-    // Inserir horários
-    for ($i = 0; $i < count($horarios); $i++) {
-        $dia_semana = $horarios[$i];
-        $hora_inicio_value = $hora_inicio[$i];
-        $hora_fim_value = $hora_fim[$i];
-        $sql_horario = "INSERT INTO horario (id_quadra, dia_semana, hora_inicio, hora_fim) 
-                        VALUES ('$id_quadra', '$dia_semana', '$hora_inicio_value', '$hora_fim_value')";
-        $conn->query($sql_horario);
+    // Upload da imagem
+    $target_dir = "img/";
+    $target_file = $target_dir . basename($_FILES["imagem"]["name"]);
+    if (!move_uploaded_file($_FILES["imagem"]["tmp_name"], $target_file)) {
+        die("Erro ao fazer upload da imagem.");
     }
 
-    echo "Quadra cadastrada com sucesso!";
-} else {
-    echo "Erro ao cadastrar quadra: " . $conn->error;
-}
+    // Inserir quadra no banco
+    $sql = "INSERT INTO quadra (nome, endereco, preco, imagem, id_usuario) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssdsi", $nome, $endereco, $preco, $imagem, $_SESSION['user_id']);
+    
+    if ($stmt->execute()) {
+        $id_quadra = $stmt->insert_id; // Obtém o ID da quadra cadastrada
 
+        // Inserir horários no banco
+        if (!empty($_POST['dias']) && !empty($_POST['hora_inicio']) && !empty($_POST['hora_fim'])) {
+            $dias = $_POST['dias'];
+            $horas_inicio = $_POST['hora_inicio'];
+            $horas_fim = $_POST['hora_fim'];
+
+            $sql_horarios = "INSERT INTO horario (id_quadra, hora_inicio, hora_fim, dia_semana) VALUES (?, ?, ?, ?)";
+            $stmt_horarios = $conn->prepare($sql_horarios);
+
+            // Inserir cada horário
+            foreach ($dias as $index => $dia) {
+                $hora_inicio = $horas_inicio[$index];
+                $hora_fim = $horas_fim[$index];
+
+                $stmt_horarios->bind_param("isss", $id_quadra, $hora_inicio, $hora_fim, $dia);
+                if (!$stmt_horarios->execute()) {
+                    echo "Erro ao inserir horário: " . $stmt_horarios->error;
+                }
+            }
+        }
+
+        // Definir que o cadastro foi bem-sucedido
+        $cadastro_sucesso = true; 
+    } else {
+        echo "Erro ao cadastrar quadra: " . $stmt->error;
+    }
+
+    $stmt->close();
 }
 
 $conn->close();
 ?>
 
-
+<!-- HTML com Formulário -->
 <link rel="stylesheet" href="styles/cadastroquad.css">
 
 <div class="container">
     <h2>Cadastrar Nova Quadra</h2>
-    <form action="cadastro_quadras.php" method="POST" enctype="multipart/form-data">
-    <div>
-        <label for="nome">Nome da Quadra:</label>
-        <input type="text" id="nome" name="nome" required>
-    </div>
-    <div>
-        <label for="endereco">Endereço:</label>
-        <input type="text" id="endereco" name="endereco" required>
-    </div>
-    <div>
-        <label for="preco">Preço (por hora):</label>
-        <input type="text" id="preco" name="preco" required>
-    </div>
-    <div>
-        <label for="imagem">Imagem da Quadra:</label>
-        <input type="file" id="imagem" name="imagem" required>
-    </div>
-    <div id="horarios">
+
+    <!-- Botão de Voltar -->
+    <a href="painel-admin.php" class="btn-voltar">← Voltar</a>
+
+    <!-- Exibe o modal de sucesso se o cadastro for bem-sucedido -->
+    <?php if ($cadastro_sucesso): ?>
+        <div id="successModal" class="success-modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <p>Quadra cadastrada com sucesso!</p>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <form action="cadastrar-quadras.php" method="POST" enctype="multipart/form-data">
+        <div>
+            <label for="nome">Nome da Quadra:</label>
+            <input type="text" id="nome" name="nome" required>
+        </div>
+        <div>
+            <label for="endereco">Endereço:</label>
+            <input type="text" id="endereco" name="endereco" required>
+        </div>
+        <div>
+            <label for="preco">Preço (por hora):</label>
+            <input type="text" id="preco" name="preco" required>
+        </div>
+        <div>
+            <label for="imagem">Imagem da Quadra:</label>
+            <input type="file" id="imagem" name="imagem" required>
+        </div>
+        <div id="horarios">
         <label>Horários Disponíveis:</label>
         <div>
             <select name="dias[]" required>
@@ -94,13 +130,32 @@ $conn->close();
             <button type="button" id="addHorario">Adicionar horário</button>
         </div>
     </div>
-    <button type="submit">Cadastrar Quadra</button>
-</form>
-
+        <button type="submit">Cadastrar Quadra</button>
+    </form>
 </div>
 
 <script>
- document.getElementById("addHorario").addEventListener("click", function() {
+// Mostrar o modal de sucesso se o cadastro foi bem-sucedido
+<?php if ($cadastro_sucesso): ?>
+    document.getElementById("successModal").style.display = "block";
+
+    // Fechar o modal após 2 segundos (não é mais necessário recarregar a página)
+    setTimeout(function() {
+        document.getElementById("successModal").style.display = "none";
+
+        // Redirecionar para o painel-admin após o modal desaparecer
+        window.location.href = 'painel-admin.php';
+    }, 2000);
+<?php endif; ?>
+
+// Função para fechar o modal quando clicar no botão de fechar
+document.querySelector(".close-btn")?.addEventListener("click", function() {
+    document.getElementById("successModal").style.display = "none";
+});
+
+
+// Função para adicionar mais horários
+document.getElementById("addHorario").addEventListener("click", function() {
     const horariosContainer = document.getElementById("horarios");
     const novoHorario = document.createElement("div");
     novoHorario.classList.add("horario-item");
@@ -119,6 +174,7 @@ $conn->close();
         <input type="time" name="hora_fim[]" required>
         <button type="button" class="remover-horario">Remover</button>
     `;
+    
     horariosContainer.appendChild(novoHorario);
 
     // Adiciona o evento de remover o horário
@@ -127,3 +183,55 @@ $conn->close();
     });
 });
 </script>
+
+<style>
+/* Estilo para o modal de sucesso */
+.success-modal {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Fundo semitransparente */
+    z-index: 9999; /* Para garantir que o modal fique sobreposto */
+}
+
+.modal-content {
+    background-color: #4CAF50;
+    color: white;
+    margin: 15% auto;
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.close-btn {
+    color: white;
+    font-size: 24px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+/* Estilo para o botão de voltar */
+.btn-voltar {
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.btn-voltar:hover {
+    background-color: #45a049;
+}
+</style>

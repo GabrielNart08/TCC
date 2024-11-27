@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 26-Nov-2024 às 23:28
+-- Tempo de geração: 27/11/2024 às 10:05
 -- Versão do servidor: 10.4.32-MariaDB
--- versão do PHP: 8.2.12
+-- Versão do PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `clientes`
+-- Estrutura para tabela `clientes`
 --
 
 CREATE TABLE `clientes` (
@@ -43,46 +43,46 @@ CREATE TABLE `clientes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Extraindo dados da tabela `clientes`
+-- Despejando dados para a tabela `clientes`
 --
 
 INSERT INTO `clientes` (`id_cliente`, `nome_completo`, `email`, `data_nascimento`, `cpf`, `cep`, `rua`, `bairro`, `cidade`, `estado`, `telefone`, `data_reserva`) VALUES
-(3, 'Gabriel Nart', 'gabrielsnart132@gmail.com', '2002-02-02', '086.343.539-40', '88817677', 'Servidão Santa Fé', 'Rio Maina', 'Criciúma', 'SC', '(48) 99999-9999', '2024-11-26 21:26:34');
+(3, 'Gabriel Nart', 'gabrielsnart132@gmail.com', '2002-02-02', '086.343.539-40', '88817677', 'Servidão Santa Fé', 'Rio Maina', 'Criciúma', 'SC', '(48) 99999-9999', '2024-11-26 21:26:34'),
+(4, 'gustavo felipe', 'gugafelipe@gmail.com', '2005-05-11', '118.882.769-32', '88804690', 'Rua Padre Mário Labarbuta', 'Pinheirinho', 'Criciúma', 'SC', '(48) 99918-4155', '2024-11-27 02:14:50'),
+(5, 'Gabriel Nart', 'gugafelipe@gmail.com', '2006-04-08', '118.882.769-32', '88817677', 'Servidão Santa Fé', 'Rio Maina', 'Criciúma', 'SC', '(48) 99918-4155', '2024-11-27 02:57:27'),
+(6, 'Fernando Colombo', 'gugafelipe@gmail.com', '2001-02-21', '118.882.769-32', '88850-00', 'Rua Padre Mário Labarbuta', 'Pinheirinho', 'Forquilhinha', 'SC', '(48) 99918-4155', '2024-11-27 03:03:52'),
+(7, 'Isadora Pinto', 'gugafelipe@gmail.com', '1111-02-21', '118.882.769-32', '88850-00', 'Rua Padre Mário Labarbuta', 'Pinheirinho', 'Forquilhinha', 'SC', '(48) 99918-4155', '2024-11-27 03:20:13'),
+(8, 'Isadora Carvalho', 'gugadugrau@gmail.com', '2001-02-21', '118.882.769-32', '88850-00', 'Rua Padre Mário Labarbuta', 'Pinheirinho', 'Forquilhinha', 'SC', '(48) 99918-4155', '2024-11-27 03:49:58'),
+(9, 'gustavo felipe', 'gugadugrau@gmail.com', '2006-04-08', '118.882.769-32', '88850-00', 'Rua Padre Mário Labarbuta', 'Pinheirinho', 'Forquilhinha', 'SC', '(48) 99918-4155', '2024-11-27 04:42:14'),
+(10, 'Fernando Colombo', 'gugadugrau@gmail.com', '2000-02-22', '118.882.769-32', '88850-00', 'Rua Padre Mário Labarbuta', 'Rio Maina', 'Forquilhinha', 'SC', '(48) 99918-4155', '2024-11-27 05:30:38'),
+(11, 'Isadora Pinto', 'gugafelipe@gmail.com', '2001-03-22', '118.882.769-32', '88850-00', 'Rua Padre Mário Labarbuta', 'Pinheirinho', 'Forquilhinha', 'SC', '(48) 99918-4155', '2024-11-27 08:42:48'),
+(12, 'Isadora Carvalho', 'gugafelipe@gmail.com', '2000-10-10', '118.882.769-32', '88850-00', 'Rua Padre Mário Labarbuta', 'Pinheirinho', 'Forquilhinha', 'SC', '(48) 99918-4155', '2024-11-27 09:02:27');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `horario`
+-- Estrutura para tabela `horario`
 --
 
 CREATE TABLE `horario` (
   `id_horario` int(11) NOT NULL,
   `id_quadra` int(11) NOT NULL,
-  `dia_semana` enum('Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo') NOT NULL,
   `hora_inicio` time NOT NULL,
-  `hora_fim` time NOT NULL
+  `hora_fim` time NOT NULL,
+  `dia_semana` enum('Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Extraindo dados da tabela `horario`
+-- Despejando dados para a tabela `horario`
 --
 
-INSERT INTO `horario` (`id_horario`, `id_quadra`, `dia_semana`, `hora_inicio`, `hora_fim`) VALUES
-(1, 3, 'Segunda', '20:00:00', '21:00:00'),
-(2, 4, 'Segunda', '20:00:00', '21:00:00'),
-(3, 5, 'Terça', '20:00:00', '21:00:00'),
-(4, 5, 'Terça', '21:00:00', '22:00:00'),
-(5, 6, 'Terça', '20:00:00', '21:00:00'),
-(6, 6, 'Terça', '19:00:00', '20:00:00'),
-(7, 6, 'Quarta', '21:00:00', '22:00:00'),
-(8, 7, 'Quinta', '21:00:00', '22:00:00'),
-(9, 7, 'Sexta', '19:00:00', '20:00:00'),
-(10, 7, 'Sexta', '20:00:00', '21:00:00');
+INSERT INTO `horario` (`id_horario`, `id_quadra`, `hora_inicio`, `hora_fim`, `dia_semana`) VALUES
+(37, 34, '22:00:00', '23:00:00', 'Quarta');
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `quadra`
+-- Estrutura para tabela `quadra`
 --
 
 CREATE TABLE `quadra` (
@@ -92,27 +92,25 @@ CREATE TABLE `quadra` (
   `tipo` varchar(50) NOT NULL,
   `preco` decimal(10,2) NOT NULL,
   `imagem` varchar(255) NOT NULL,
-  `id_usuario` int(11) NOT NULL,
-  `horarios` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`horarios`))
+  `id_usuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Extraindo dados da tabela `quadra`
+-- Despejando dados para a tabela `quadra`
 --
 
-INSERT INTO `quadra` (`id_quadra`, `nome`, `endereco`, `tipo`, `preco`, `imagem`, `id_usuario`, `horarios`) VALUES
-(1, 'Brotolandia', 'Rua Henrique Lage', '', 120.00, 'Captura de Tela (1).png', 1, NULL),
-(2, 'tigrezinho', 'Rua Henrique Lage', '', 120.00, 'Captura de Tela (6).png', 1, 'null'),
-(3, 'tigrezao', 'Rua Henrique Lage', '', 140.00, 'Captura de Tela (6) - Copia.png', 1, NULL),
-(4, 'teste1', 'vila isabel', '', 200.00, 'Leonardo_Phoenix_a_dramatic_highcontrast_cinematic_photograph_1.jpg', 1, NULL),
-(5, 'flamengo', 'rio maina', '', 180.00, 'Leonardo_Phoenix_A_hauntingly_beautiful_highcontrast_cinematic_2.jpg', 1, NULL),
-(6, 'Angeloni', 'Rua henrique 123', '', 200.00, 'Leonardo_Phoenix_A_hauntingly_beautiful_highcontrast_cinematic_2.jpg', 1, NULL),
-(7, 'testeeeeee', 'rio maina', '', 160.00, 'Leonardo_Phoenix_A_modern_digital_calendar_interface_featuring_3.jpg', 1, NULL);
+INSERT INTO `quadra` (`id_quadra`, `nome`, `endereco`, `tipo`, `preco`, `imagem`, `id_usuario`) VALUES
+(29, 'Brotolandia', 'R. João Olivo - Rio Maina, Criciúma - SC, 88806-813', '', 100.00, 'Captura de tela 2023-10-22 211138.png', 1),
+(30, 'Brotolandia', 'R. João Olivo - Rio Maina, Criciúma - SC, 88806-813', '', 200.00, 'Captura de tela 2023-10-22 211138.png', 1),
+(31, 'Angeloni', 'R. João Olivo - Rio Maina, Criciúma - SC, 88806-813', '', 130.00, 'Captura de tela 2023-10-22 211138.png', 1),
+(32, 'tigres', 'R. João Olivo - Rio Maina, Criciúma - SC, 88806-813', '', 130.00, 'Captura de tela 2023-10-22 211138.png', 1),
+(33, 'Angeloni', 'R. João Olivo - Rio Maina, Criciúma - SC, 88806-813', '', 120.00, 'Captura de tela 2023-10-22 211138.png', 1),
+(34, 'tigressss', 'R. João Olivo - Rio Maina, Criciúma - SC, 88806-813', '', 200.00, 'Captura de tela 2023-10-22 211138.png', 1);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `reservas`
+-- Estrutura para tabela `reservas`
 --
 
 CREATE TABLE `reservas` (
@@ -121,21 +119,22 @@ CREATE TABLE `reservas` (
   `id_horario` int(11) NOT NULL,
   `id_cliente` int(11) NOT NULL,
   `data_reserva` timestamp NOT NULL DEFAULT current_timestamp(),
-  `status` enum('em análise','confirmada','cancelada') DEFAULT 'em análise',
+  `status` enum('em análise','confirmada','não compareceu','cancelada','ok') NOT NULL DEFAULT 'em análise',
   `id_usuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Extraindo dados da tabela `reservas`
+-- Despejando dados para a tabela `reservas`
 --
 
 INSERT INTO `reservas` (`id_reserva`, `id_quadra`, `id_horario`, `id_cliente`, `data_reserva`, `status`, `id_usuario`) VALUES
-(1, 7, 9, 3, '2024-11-26 21:26:34', 'em análise', 0);
+(9, 34, 37, 11, '2024-11-27 08:42:48', '', 5),
+(10, 34, 37, 12, '2024-11-27 09:02:27', 'ok', 5);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `usuario`
+-- Estrutura para tabela `usuario`
 --
 
 CREATE TABLE `usuario` (
@@ -148,7 +147,7 @@ CREATE TABLE `usuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Extraindo dados da tabela `usuario`
+-- Despejando dados para a tabela `usuario`
 --
 
 INSERT INTO `usuario` (`id_usuario`, `username`, `senha`, `email`, `nome`, `tipo`) VALUES
@@ -156,34 +155,35 @@ INSERT INTO `usuario` (`id_usuario`, `username`, `senha`, `email`, `nome`, `tipo
 (2, 'nartt', '$2y$10$WlQ8CZ2P2RMsRUFT0Ba8kug7jIkFaHR5.LoOfcLWGwVQr3c5l8guK', 'gabrielsnart132@gmail.com', 'Gabriel', 'cliente'),
 (3, 'narti', '$2y$10$Oyc.mXVq1A3ovvAC72OTx.iczyUvWRX9z1FwJZLSKfAIises3ide2', 'gabrielnart@hotmail.com', 'Gabriel', 'administrador'),
 (4, 'top123', '$2y$10$XxVmDvGfMQEXYNG4Muukuu2cBQrWPaizK.tW8UJZyGvjw/3i./8bG', 'gustavo@gmail.com', 'Gustavo', 'cliente'),
-(0, 'ggg', '$2y$10$OumMILsCpK/5nXOKf3F4seubxrbcigonA/9/hCU0uOybDV1smaqHq', 'gustavo1@gmail.com', 'gustavo', 'cliente');
+(5, 'ggg', '$2y$10$OumMILsCpK/5nXOKf3F4seubxrbcigonA/9/hCU0uOybDV1smaqHq', 'gustavo1@gmail.com', 'gustavo', 'cliente'),
+(6, 'guga00', '$2y$10$MfDDATys84rkSyjKa4ueo.KFwAP5If4VIY.43oQnHx3UPHauO43T2', 'gugafelipe@gmail.com', 'gustavo felipe', 'cliente');
 
 --
 -- Índices para tabelas despejadas
 --
 
 --
--- Índices para tabela `clientes`
+-- Índices de tabela `clientes`
 --
 ALTER TABLE `clientes`
   ADD PRIMARY KEY (`id_cliente`),
   ADD UNIQUE KEY `id_cliente` (`id_cliente`);
 
 --
--- Índices para tabela `horario`
+-- Índices de tabela `horario`
 --
 ALTER TABLE `horario`
   ADD PRIMARY KEY (`id_horario`),
   ADD KEY `id_quadra` (`id_quadra`);
 
 --
--- Índices para tabela `quadra`
+-- Índices de tabela `quadra`
 --
 ALTER TABLE `quadra`
   ADD PRIMARY KEY (`id_quadra`);
 
 --
--- Índices para tabela `reservas`
+-- Índices de tabela `reservas`
 --
 ALTER TABLE `reservas`
   ADD PRIMARY KEY (`id_reserva`),
@@ -192,45 +192,57 @@ ALTER TABLE `reservas`
   ADD KEY `reservas_ibfk_3` (`id_cliente`);
 
 --
--- AUTO_INCREMENT de tabelas despejadas
+-- Índices de tabela `usuario`
+--
+ALTER TABLE `usuario`
+  ADD PRIMARY KEY (`id_usuario`);
+
+--
+-- AUTO_INCREMENT para tabelas despejadas
 --
 
 --
 -- AUTO_INCREMENT de tabela `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de tabela `horario`
 --
 ALTER TABLE `horario`
-  MODIFY `id_horario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_horario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT de tabela `quadra`
 --
 ALTER TABLE `quadra`
-  MODIFY `id_quadra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_quadra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de tabela `reservas`
 --
 ALTER TABLE `reservas`
-  MODIFY `id_reserva` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_reserva` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- Restrições para despejos de tabelas
+-- AUTO_INCREMENT de tabela `usuario`
+--
+ALTER TABLE `usuario`
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- Restrições para tabelas despejadas
 --
 
 --
--- Limitadores para a tabela `horario`
+-- Restrições para tabelas `horario`
 --
 ALTER TABLE `horario`
   ADD CONSTRAINT `horario_ibfk_1` FOREIGN KEY (`id_quadra`) REFERENCES `quadra` (`id_quadra`) ON DELETE CASCADE;
 
 --
--- Limitadores para a tabela `reservas`
+-- Restrições para tabelas `reservas`
 --
 ALTER TABLE `reservas`
   ADD CONSTRAINT `reservas_ibfk_1` FOREIGN KEY (`id_quadra`) REFERENCES `quadra` (`id_quadra`) ON DELETE CASCADE,

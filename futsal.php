@@ -1,7 +1,24 @@
 <?php
 session_start();
-?>
 
+// Conexão com o banco de dados
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "reservaquadras";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar se a conexão foi bem-sucedida
+if ($conn->connect_error) {
+    die("Conexão falhou: " . $conn->connect_error);
+}
+
+// Consultar as quadras no banco de dados
+$sql = "SELECT id_quadra, nome, endereco, preco, imagem, id_usuario FROM quadra";
+$result = $conn->query($sql);
+
+?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -13,9 +30,52 @@ session_start();
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="styles/home.css">
     <link rel="stylesheet" href="styles/header.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>Aluguel de Quadras Esportivas</title>
     <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+*{
+    font-family: 'Poppins', sans-serif;
+}
+.horario-intervalo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 8px;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.horario-intervalo:hover {
+    background-color: #e0e0e0;
+}
+
+.reservar-btn-horario {
+    padding: 5px 15px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.reservar-btn-horario:hover {
+    background-color: #0056b3;
+}
+
+.reservar-btn-horario:active {
+    background-color: #004080;
+}
+
+       
 .modal {
     display: none;
     position: fixed;
@@ -33,96 +93,167 @@ session_start();
     margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 90%;
-    max-width: 800px;
+    width: 80%;
+    max-width: 600px;
     border-radius: 15px;
     display: flex;
-    max-height: 80%;
-    overflow: hidden; /* Impede a rolagem do conteúdo */
-    position: relative; /* Para o botão de fechar */
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
 }
 
 .modal-image {
-    flex: 1; /* Aumenta a flexibilidade da imagem */
-    border-radius: 15px 0 0 15px; /* Borda arredondada à esquerda */
-    overflow: hidden; /* Para garantir que a imagem não saia dos limites */
+    width: 100%;
+    height: 250px;
+    margin-top: 20px;
+    border-radius: 15px 15px 0 0;
+    overflow: hidden;
 }
 
-.modal-image img {
-    width: 100%; /* Aumenta a largura da imagem para preencher a área */
-    height: 100%; /* Faz a imagem ocupar toda a altura do container */
-    object-fit: cover; /* Cobre a área sem distorcer */
-}
 
 .modal-info {
-    flex: 2;
-    padding-left: 20px; /* Espaçamento à esquerda do conteúdo textual */
-    border-radius: 0 15px 15px 0; /* Borda arredondada à direita */
-}
-
-.close {
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
-    position: absolute; /* Faz o botão de fechar ficar posicionado no canto */
-    right: 20px; /* Distância do lado direito */
-    top: 15px; /* Distância do topo */
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+    padding: 10px;
+    border-radius: 0 0 15px 15px;
 }
 
 .horarios {
     margin-top: 20px;
-    background-color: white; /* Fundo branco para os horários */
-    padding: 10px; /* Adiciona um pouco de espaçamento */
-    border-radius: 5px; /* Borda arredondada */
-    display: flex; /* Alinha os botões horizontalmente */
-    border: 1px solid #ccc; /* Borda ao redor da seção de horários */
 }
 
-.horario-btn {
-    margin: 5px; /* Espaçamento entre os botões de horário */
-    padding: 10px 15px; /* Aumenta o tamanho dos botões */
-    background-color: #f0f0f0; /* Cor de fundo dos botões */
-    border: 1px solid #ccc; /* Borda dos botões */
-    cursor: pointer;
-    border-radius: 4px; /* Borda arredondada */
-    transition: background-color 0.3s; /* Transição suave */
+
+.horario-intervalo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f0f0f0;
+    margin-bottom: 5px;
+    border-radius: 4px;
 }
 
-.horario-btn:hover {
-    background-color: #dcdcdc; /* Cor ao passar o mouse */
-}
-
-.reservar-btn {
-    margin-top: 20px;
+.reservar-btn-horario {
+    padding: 5px 10px;
     background-color: #4CAF50;
     color: white;
     border: none;
-    padding: 15px 50px; /* Aumenta a altura e largura do botão */
+    border-radius: 4px;
     cursor: pointer;
-    border-radius: 5px; /* Borda arredondada */
-    font-size: 16px; /* Aumenta a fonte */
-    width: 100%; /* Botão ocupa toda a largura disponível */
 }
 
-.reservar-btn:hover {
+.reservar-btn-horario:hover {
     background-color: #45a049;
 }
+.swiper-container {
+    position: relative;
+    width: 100%;
+    height: 250px; }
 
-.horario-btn.selecionado {
-    background-color: #76c7c0; /* Verde claro quando selecionado */
+.swiper-button-next,
+.swiper-button-prev {
+    position: absolute;
+    top: 50%;   
+    transform: translateY(-50%);     
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.5);   
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
 }
 
-.horario-btn.indisponivel {
-    background-color: red; /* Vermelho para horários reservados */
-    pointer-events: none; /* Impede que o botão seja clicado */
+.swiper-button-next {
+    right: 8px; }
+
+.swiper-button-prev {
+    left: 8px; }
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    background-color: rgba(0, 0, 0, 0.8); }
+
+    .swiper-button-next::after,
+.swiper-button-prev::after {
+    font-size: 18px;
+    font-weight: bold; 
 }
+
+.swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;     border-radius: 15px; }
+
+    .close {
+    font-size: 36px; 
+    position: absolute;
+    top: -10px;
+    right: 15px;
+    color: #333;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;  
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #555; 
+}
+
+.modal-detail {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.modal-detail i {
+    margin-right: 10px;
+    color: #4CAF50; 
+}
+
+.modal-detail p {
+    margin: 0;
+    font-size: 16px;
+}
+
+#modal-avaliacao-estrelas {
+    color: #FFD700; 
+}
+
+/* Estilo para o botão */
+.btn-selecionar-dia {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-selecionar-dia:hover {
+    background-color: #0056b3;
+}
+
+.lista-dias {
+    display: none;  /* Esconde a lista por padrão */
+}
+
+.lista-dias.show {
+    display: block;  /* Exibe a lista quando a classe 'show' é adicionada */
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #f4f4f4;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+
     </style>
 </head>
 <body>
@@ -130,34 +261,24 @@ session_start();
     <nav id="navbar">
         <i class="fa-regular fa-futbol" id="logo">FutReserva</i>
         <ul id="nav_list">
-            <li id="nav-item">
-                <a href="index.php">Início</a>
-            </li>
-            <li id="nav-item">
-                <a href="quadras.php">Quadras</a>
-            </li>
-            <li id="nav-item">
-                <a href="contatos.php">Contato</a>
-            </li>
-            <li id="nav-item">
-                <a href="reservas.php">Minhas Reservas</a>
-            </li>
+            <li id="nav-item"><a href="index.php">Início</a></li>
+            <li id="nav-item"><a href="quadras.php">Quadras</a></li>
+            <li id="nav-item"><a href="contatos.php">Contato</a></li>
+            <li id="nav-item"><a href="reservas.php">Minhas Reservas</a></li>
         </ul>
         <div id="login-section">
             <?php if (!isset($_SESSION['user_id'])): ?>
-                <button id="btn-default">
-                    <a href="login.php" id="Login-botton">Login</a>
-                </button>
+                <button id="btn-default"><a href="login.php" id="Login-botton">Login</a></button>
             <?php endif; ?>
         </div>
-
         <div id="user-section">
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <i class="fa-regular fa-user" id="profile-icon"></i>
-            <?php endif; ?>
-        </div>
-    </nav>
+                <?php if (isset($_SESSION['user_id'])): ?>
 
+                    <i class="fa-regular fa-user" id="profile-icon"></i>
+                <?php endif; ?>
+            </div>
+    </nav>
+    
     <div id="sidebar">
     <div id="sidebar-header">
         <button id="close-sidebar">&times;</button>
@@ -180,62 +301,89 @@ session_start();
       
 </header>
 
+<h1>Centros Esportivos</h1>
 <div class="quadras-container">
-    <div class="quadra">
-        <img src="img/society.jpg" alt="Quadra futsal 1" class="foto">
-        <div class="detalhes">
-            <h2 class="nome">Quadra Futsal 1</h2>
-            <p>Endereço: Rua Exemplo, 123</p>
-            <p>Valor: R$ 100/hora</p>
-            <button class="ver-mais" data-nome="Quadra Futsal 1" data-endereco="Rua Exemplo, 123" data-valor="R$ 100/hora" data-imagem="img/society.jpg">Ver mais</button>
-        </div>
-    </div>
-
-    <div class="quadra">
-        <img src="img/society.jpg" alt="Quadra Futsal 2" class="foto">
-        <div class="detalhes">
-            <h2 class="nome">Quadra Futsal 2</h2>
-            <p>Endereço: Rua Exemplo, 456</p>
-            <p>Valor: R$ 120/hora</p>
-            <button class="ver-mais" data-nome="Quadra Futsal 2" data-endereco="Rua Exemplo, 456" data-valor="R$ 120/hora" data-imagem="img/society.jpg">Ver mais</button>
-        </div>
-    </div>
-
-    <div class="quadra">
-        <img src="img/society.jpg" alt="Quadra Futsal 3" class="foto">
-        <div class="detalhes">
-            <h2 class="nome">Quadra Futsal 3</h2>
-            <p>Endereço: Rua Exemplo, 789</p>
-            <p>Valor: R$ 150/hora</p>
-            <button class="ver-mais" data-nome="Quadra Futsal 3" data-endereco="Rua Exemplo, 789" data-valor="R$ 150/hora" data-imagem="img/society.jpg">Ver mais</button>
-        </div>
-    </div>
-</div>
-
-<div id="myModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <div class="modal-image">
-            <img id="modal-img" src="" alt="Imagem da Quadra" style="width: 100%; height: auto;">
-        </div>
-        <div class="modal-info">
-            <h2 id="modal-nome">Detalhes da Quadra</h2>
-            <p id="modal-endereco"></p>
-            <p id="modal-valor"></p>
-            <div class="horarios">
-    <h3>Horários Disponíveis:</h3>
-    <button class="horario-btn" data-horario="08:00">08:00</button>
-    <button class="horario-btn" data-horario="10:00">10:00</button>
-    <button class="horario-btn" data-horario="12:00">12:00</button>
-    <button class="horario-btn" data-horario="14:00">14:00</button>
+    <?php if ($result->num_rows > 0): ?>
+        <?php while($row = $result->fetch_assoc()): ?>
+            <div class="quadra">
+                <img src="img/<?= $row['imagem']; ?>" alt="Imagem da quadra" class="foto">
+                <div class="detalhes">
+                    <h2 class="nome"><?= $row['nome']; ?></h2>
+                    <div class="info">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <p>Endereço: <?= $row['endereco']; ?></p>
+                    </div>
+                    <div class="info">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                        <p>Valor: R$ <?= number_format($row['preco'], 2, ',', '.'); ?>/h</p>
+                    </div>
+                    <div class="info">
+                        <i class="fa-solid fa-star"></i>
+                        <p>Avaliações:</p>
+                    </div>
+                    <button class="ver-mais" data-target="#modal-<?= $row['id_quadra']; ?>">Ver mais</button>
+                </div>
             </div>
-            <button class="reservar-btn">Reservar</button>
-        </div>
-    </div>
+
+            <!-- Modal de Detalhes da Quadra -->
+            <div id="modal-<?= $row['id_quadra']; ?>" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <div class="swiper-container modal-image">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide"><img src="img/<?= $row['imagem']; ?>" alt="Imagem 1"></div>
+                            <div class="swiper-slide"><img src="img/futsalquad.jpg" alt="Imagem 2"></div>
+                            <div class="swiper-slide"><img src="img/futsalsociety.jpg" alt="Imagem 3"></div>
+                        </div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                    <div class="modal-info">
+                        <h2 id="modal-nome"><?= $row['nome']; ?> - Detalhes</h2>
+                        <div class="modal-detail">
+                            <i class="fa-solid fa-location-pin"></i>
+                            Endereço: <?= $row['endereco']; ?>
+                        </div>
+                        <div class="modal-detail">
+                            <i class="fa-solid fa-dollar-sign"></i>
+                            R$ <?= number_format($row['preco'], 2, ',', '.'); ?>/hora
+                        </div>
+                        <div class="modal-detail">
+                            <i class="fa-solid fa-star"></i>
+                            Avaliações:
+                        </div>
+                        <div>
+                        <button id="btn-selecionar-dia-<?= $row['id_quadra']; ?>" class="btn-selecionar-dia" data-quadra="<?= $row['id_quadra']; ?>">Selecionar Dia</button>
+
+                            <select id="seletorDia-<?= $row['id_quadra']; ?>" class="seletorDia" style="display: none;">
+                                <option value="Segunda">Segunda-feira</option>
+                                <option value="Terça">Terça-feira</option>
+                                <option value="Quarta">Quarta-feira</option>
+                                <option value="Quinta">Quinta-feira</option>
+                                <option value="Sexta">Sexta-feira</option>
+                                <option value="Sábado">Sábado</option>
+                                <option value="Domingo">Domingo</option>
+                            </select>
+                        </div>
+
+
+                        <!-- Exibição dos horários -->
+                        <div id="horariosDisponiveis-<?= $row['id_quadra']; ?>" style="display: none;">
+                            <h3>Horários Disponíveis:</h3>
+                            <ul id="listaHorarios-<?= $row['id_quadra']; ?>"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endwhile; ?>
+    <?php else: ?>
+        <p>Não há quadras disponíveis no momento.</p>
+    <?php endif; ?>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Abrir e fechar sidebar
     var sidebar = document.getElementById('sidebar');
     var profileIcon = document.getElementById('profile-icon');
     var closeButton = document.getElementById('close-sidebar');
@@ -250,75 +398,166 @@ document.addEventListener('DOMContentLoaded', function() {
         sidebar.style.width = '0';
     }
 
+     
+
+
     profileIcon.addEventListener('click', openSidebar);
     closeButton.addEventListener('click', closeSidebar);
 
-    var modal = document.getElementById("myModal");
-    var btns = document.querySelectorAll(".ver-mais");
-    var span = document.getElementsByClassName("close")[0];
+    // Modal de Detalhes da Quadra
+    var modals = document.querySelectorAll(".modal");
+    var closeBtns = document.querySelectorAll(".close");
 
-    btns.forEach(function(btn) {
-        btn.onclick = function() {
-            modal.style.display = "block";
-            document.getElementById("modal-nome").innerText = this.getAttribute("data-nome");
-            document.getElementById("modal-endereco").innerText = "Endereço: " + this.getAttribute("data-endereco");
-            document.getElementById("modal-valor").innerText = "Valor: " + this.getAttribute("data-valor");
-            document.getElementById("modal-img").src = this.getAttribute("data-imagem");
+    closeBtns.forEach(function(btn) {
+        btn.addEventListener("click", function() {
+            var modal = this.closest(".modal");
+            modal.style.display = "none";
+        });
+    });
+
+    window.addEventListener("click", function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = "none";
         }
     });
 
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
+    // Iniciar Swiper para as imagens no modal
+    var swiper = new Swiper('.swiper-container', {
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
 
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-    var horariosReservados = []; // Array para armazenar horários reservados
+    // Exibir o modal ao clicar no botão "Ver mais"
+    var btns = document.querySelectorAll('.ver-mais');
+    btns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var targetModal = document.querySelector(this.getAttribute("data-target"));
+            targetModal.style.display = "block";
+        });
+    });
 
-document.querySelectorAll('.horario-btn').forEach(function(btn) {
-    btn.onclick = function() {
-        var horario = this.getAttribute('data-horario');
-        
-        // Verifica se o horário já está reservado
-        if (!horariosReservados.includes(horario)) {
-            horariosReservados.push(horario); // Adiciona o horário ao array
-            this.classList.add('indisponivel'); // Marca o botão como indisponível
-            alert("Horário " + horario + " reservado com sucesso!"); // Mensagem de sucesso
-        } else {
-            alert("Este horário já está reservado."); // Mensagem de erro
-        }
-    };
-    var horarioSelecionado = null; // Armazena o horário selecionado
+    // Exibir seletor de dia e carregar horários
+    document.querySelectorAll('.ver-mais').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const targetModal = document.querySelector(event.target.getAttribute('data-target'));
+            const idQuadra = targetModal.id.split('-')[1]; // Extrai o id da quadra
 
-document.querySelectorAll('.horario-btn').forEach(function(btn) {
-    btn.onclick = function() {
-        // Remove a classe de seleção de qualquer botão previamente selecionado
-        if (horarioSelecionado) {
-            horarioSelecionado.classList.remove('selecionado');
-        }
+            // Lógica do botão Selecionar Dia
+            const btnSelecionarDia = document.getElementById(`btn-selecionar-dia-${idQuadra}`);
+            const seletorDia = document.getElementById(`seletorDia-${idQuadra}`);
+            const horariosDisponiveisDiv = document.getElementById(`horariosDisponiveis-${idQuadra}`);
+            const listaHorarios = document.getElementById(`listaHorarios-${idQuadra}`);
 
-        // Adiciona a classe de selecionado ao botão atual
-        this.classList.add('selecionado');
-        horarioSelecionado = this; // Armazena o horário selecionado
+            // Mostrar/Esconder seletor de dia
+            btnSelecionarDia.addEventListener('click', function() {
+                if (seletorDia.style.display === 'none' || seletorDia.style.display === '') {
+                    seletorDia.style.display = 'block';
+                } else {
+                    seletorDia.style.display = 'none';
+                }
+            });
 
-        // Quando o botão "Reservar" é clicado
-        document.querySelector('.reservar-btn').onclick = function() {
-            if (horarioSelecionado) {
-                horarioSelecionado.classList.add('indisponivel'); // Marca como reservado
-                alert("Horário " + horarioSelecionado.getAttribute('data-horario') + " reservado com sucesso!");
-                horarioSelecionado = null; // Reseta a seleção
-                // Aqui você pode adicionar a lógica para salvar a reserva
+           // Quando o dia for selecionado, faz a requisição para obter os horários
+seletorDia.addEventListener('change', function (event) {
+    const diaSelecionado = event.target.value;
+
+    // Fazendo a requisição AJAX para obter os horários
+    fetch(`get_horarios.php?id_quadra=${idQuadra}&dia_semana=${diaSelecionado}`)
+        .then(response => response.json())
+        .then(data => {
+            // Limpar lista de horários
+            listaHorarios.innerHTML = '';
+
+            // Adicionar horários na lista
+            if (data.horarios && data.horarios.length > 0) {
+                data.horarios.forEach(horario => {
+                    const li = document.createElement('li');
+                    li.classList.add('horario-intervalo');
+                    li.innerHTML = `
+                        ${horario.hora_inicio} - ${horario.hora_fim}
+                        <button class="reservar-btn-horario" 
+                            data-id-horario="${horario.id_horario}" 
+                            data-id-quadra="${data.id_quadra}">Reservar</button>`;
+                    listaHorarios.appendChild(li);
+                });
             } else {
-                alert("Por favor, selecione um horário primeiro.");
+                listaHorarios.innerHTML = '<li>Não há horários disponíveis.</li>';
             }
-        };
-    };
+
+            // Exibir a div com os horários disponíveis
+            horariosDisponiveisDiv.style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Erro ao buscar horários:', error);
+        });
 });
+        });
+    });
 });
+
+
+document.addEventListener('click', function (event) {
+    // Verifica se o clique foi em um botão com a classe '.reservar-btn-horario'
+    if (event.target.classList.contains('reservar-btn-horario')) {
+        const idHorario = event.target.getAttribute('data-id-horario'); // Obtém o id do horário
+        const idQuadra = event.target.getAttribute('data-id-quadra'); // Obtém o id da quadra
+
+        // Verifique se os dados estão corretos
+        console.log(`id_horario: ${idHorario}, id_quadra: ${idQuadra}`);
+
+        // Monta a URL para a página de dados do cliente
+        const urlReserva = `/TCC/dadoscliente.php?id_horario=${idHorario}&id_quadra=${idQuadra}`;
+
+        // Redireciona o usuário para a página de dados do cliente
+        window.location.href = urlReserva;
+    }
 });
+
+
+// Função para mostrar ou esconder a lista de dias
+document.querySelectorAll('.btn-selecionar-dia').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const idQuadra = this.id.split('-')[3]; // Pega o id_quadra da string do botão
+        const listaDias = document.getElementById(`listaDias-${idQuadra}`);
+
+        // Alterna a visibilidade da lista de dias
+        listaDias.classList.toggle('show');
+    });
+});
+
+// Atualizar o texto do botão com o dia selecionado
+document.querySelectorAll('.lista-dias li').forEach(item => {
+    item.addEventListener('click', function() {
+        const diaSelecionado = this.getAttribute('data-dia'); // Pega o dia selecionado
+        const idQuadra = this.parentElement.id.split('-')[1]; // Pega o id_quadra da string do id da lista
+        const btn = document.getElementById(`btn-selecionar-dia-${idQuadra}`);
+
+        // Atualiza o texto do botão com o valor do dia selecionado
+        btn.textContent = diaSelecionado;
+
+        // Esconde a lista de dias após a seleção
+        const listaDias = document.getElementById(`listaDias-${idQuadra}`);
+        listaDias.classList.remove('show');
+    });
+});
+
+// Fechar a lista de dias se o usuário clicar fora do botão ou da lista
+document.addEventListener('click', function(event) {
+    const isClickInside = event.target.closest('.btn-selecionar-dia') || event.target.closest('.lista-dias');
+    if (!isClickInside) {
+        document.querySelectorAll('.lista-dias').forEach(lista => {
+            lista.classList.remove('show');
+        });
+    }
+});
+
 </script>
+
 </body>
 </html>
+<?php
+// Fechar a conexão com o banco de dados ao final
+$conn->close();
+?>

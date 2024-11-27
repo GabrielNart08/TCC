@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    background-color: green;
+    color: #1d1d1d;
+    padding: 20px;
+    text-align: center;
+    margin: 0;
+}
+
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color:green;
+    color: #1d1d1d;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+button {
+    padding: 8px 16px;
+    margin: 5px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+button[type="submit"][name="acao"][value="cancelar"] {
+    background-color: #f44336;
+}
+
+button[type="submit"][name="acao"][value="cancelar"]:hover {
+    background-color: #e53935;
+}
+
+form {
+    display: inline-block;
+}
+
+/* Responsividade */
+@media screen and (max-width: 768px) {
+    table {
+        width: 100%;
+    }
+
+    table th, table td {
+        padding: 8px;
+    }
+
+    button {
+        padding: 6px 12px;
+    }
+}

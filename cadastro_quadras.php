@@ -42,26 +42,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id_quadra = $stmt->insert_id; // Obtém o ID da quadra cadastrada
 
         // Inserir horários no banco
-        if (!empty($_POST['dias']) && !empty($_POST['hora_inicio']) && !empty($_POST['hora_fim'])) {
-            $dias = $_POST['dias'];
+        if (!empty($_POST['datas']) && !empty($_POST['hora_inicio']) && !empty($_POST['hora_fim'])) {
+            $datas = $_POST['datas'];
             $horas_inicio = $_POST['hora_inicio'];
             $horas_fim = $_POST['hora_fim'];
 
-            $sql_horarios = "INSERT INTO horario (id_quadra, dia_semana, hora_inicio, hora_fim) VALUES (?, ?, ?, ?)";
+            $sql_horarios = "INSERT INTO horario (id_quadra, data, hora_inicio, hora_fim) VALUES (?, ?, ?, ?)";
             $stmt_horarios = $conn->prepare($sql_horarios);
 
-            foreach ($dias as $index => $dia) {
+            foreach ($datas as $index => $data) {
                 $hora_inicio = $horas_inicio[$index];
                 $hora_fim = $horas_fim[$index];
 
-                $stmt_horarios->bind_param("isss", $id_quadra, $dia, $hora_inicio, $hora_fim);
+                $stmt_horarios->bind_param("isss", $id_quadra, $data, $hora_inicio, $hora_fim);
                 if (!$stmt_horarios->execute()) {
                     echo "Erro ao inserir horário: " . $stmt_horarios->error;
                 }
             }
         }
 
-        echo "Quadra cadastrada com sucesso!";
+        // Setar uma variável de sucesso para ser exibida na página
+        $_SESSION['quadra_cadastrada'] = true;
+
+        // Não redirecionar, apenas carregar a página atual
+        header("Location: cadastro_quadras.php");
+        exit();
     } else {
         echo "Erro ao cadastrar quadra: " . $stmt->error;
     }

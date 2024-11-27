@@ -15,13 +15,16 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'administrador') 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Admin</title>
     <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: #f4f4f9;
             display: flex;
             justify-content: center;
@@ -72,14 +75,38 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'administrador') 
         .logout:hover {
             background-color: #a71d2a;
         }
+
+        #pend {
+
+            background-color: rgb(255, 208, 0);
+            color: #1d1d1d;
+            font-weight:550;
+            transition: background-color 0.3s ease;
+        }
+        #pend:hover {
+            background-color:rgb(245, 190,0);
+        }
+
+
+        #conf {
+            background-color: forestgreen;
+            font-weight: 550;
+            color: #1d1d1d;
+            transition: background-color 0.3s ease;
+        }
+        #conf:hover {
+            background-color: green;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Bem-vindo, <?php echo htmlspecialchars($_SESSION['username']); ?>!</h1>
         <div class="options">
-            <a href="admin-reservas.php" class="option">Minhas Quadras</a>
+            <a href="admin-reservas.php" class="option" id="pend">Reservas Pendentes</a>
+            <a href="reservas-confirmadas.php" class="option" id="conf">Reservas Confirmadas</a>
             <a href="cadastrar-quadras.php" class="option">Cadastrar Quadras</a>
+            
         </div>
         <a href="logout.php" class="logout">Sair</a>
     </div>

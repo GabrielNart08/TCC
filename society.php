@@ -15,7 +15,7 @@ if ($conn->connect_error) {
 }
 
 // Consultar as quadras no banco de dados
-$sql = "SELECT id_quadra, nome, endereco, preco, imagem, horarios, id_usuario FROM quadra";
+$sql = "SELECT id_quadra, nome, endereco, preco, imagem, id_usuario FROM quadra";
 $result = $conn->query($sql);
 
 ?>

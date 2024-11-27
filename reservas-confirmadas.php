@@ -2,7 +2,6 @@
 session_start();
 require 'conexao.php';
 
-// Verificar se o usuário está logado como administrador
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'administrador') {
     header('Location: login.php');
     exit;
@@ -10,16 +9,17 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'administrador') 
 
 $id_admin = $_SESSION['user_id'];
 
-// Alterando a consulta SQL para refletir as relações corretas
+// Alterando a consulta SQL para pegar as reservas confirmadas
 $query_reservas = "
     SELECT r.id_reserva, r.status, c.nome_completo AS nome_usuario, c.cpf, q.nome AS nome_quadra, q.endereco, r.id_horario
     FROM reservas r
     JOIN clientes c ON r.id_cliente = c.id_cliente  -- Pegando dados diretamente da tabela clientes
     JOIN quadra q ON r.id_quadra = q.id_quadra
-    WHERE r.status = 'em análise' AND q.id_usuario = '$id_admin'
+    WHERE r.status = 'confirmada' AND q.id_usuario = '$id_admin'
 ";
 
 $result_reservas = mysqli_query($conn, $query_reservas);
+
 ?>
 
 <!DOCTYPE html>
@@ -27,8 +27,8 @@ $result_reservas = mysqli_query($conn, $query_reservas);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/reservaspend.css">
-    <title>Admin - Reservas Pendentes</title>
+    <link rel="stylesheet" href="styles/reservasconf.css">
+    <title>Admin - Reservas Confirmadas</title>
     <style>
         /* Estilo básico para o botão de voltar */
         .btn-voltar {
@@ -51,10 +51,11 @@ $result_reservas = mysqli_query($conn, $query_reservas);
     </style>
 </head>
 <body>
-    <h1>Reservas Pendentes</h1>
+    <h1>Reservas Confirmadas</h1>
+
     <table border="1">
         <tr>
-            <th>Nome do Cliente</th>
+            <th>Usuário</th>
             <th>Quadra</th>
             <th>CPF</th>
             <th>Data e Horário</th>
@@ -79,15 +80,14 @@ $result_reservas = mysqli_query($conn, $query_reservas);
                 </td>
                 <td><?= htmlspecialchars($reserva['status']); ?></td>
                 <td>
-                    <!-- Formulário para confirmar a reserva -->
+                    <!-- Botões OK e Não Compareceu -->
                     <form method="post" action="processar-reserva.php" style="display: inline;">
                         <input type="hidden" name="id_reserva" value="<?= $reserva['id_reserva']; ?>">
-                        <button type="submit" name="acao" value="confirmar">Confirmar</button>
+                        <button type="submit" name="acao" value="ok">OK</button>
                     </form>
-                    <!-- Formulário para cancelar a reserva -->
                     <form method="post" action="processar-reserva.php" style="display: inline;">
                         <input type="hidden" name="id_reserva" value="<?= $reserva['id_reserva']; ?>">
-                        <button type="submit" name="acao" value="cancelar">Cancelar</button>
+                        <button type="submit" name="acao" value="nao_compareceu">Não Compareceu</button>
                     </form>
                 </td>
             </tr>
