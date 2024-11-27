@@ -18,6 +18,8 @@ if ($conn->connect_error) {
 $sql = "SELECT id_quadra, nome, endereco, preco, imagem, id_usuario FROM quadra";
 $result = $conn->query($sql);
 
+
+
 ?>
 
 <!DOCTYPE html>

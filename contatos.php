@@ -152,7 +152,7 @@ session_start();
     <div class="contact-info">
         <p><i class="fas fa-phone"></i> Telefone: <a href="https://wa.me/5548998566251">(48) 99856-6251</a></p>
         <p><i class="fas fa-envelope"></i> E-mail: <a href="mailto:futreserva@gmail.com">futreserva@gmail.com</a></p>
-        <p><i class="fas fa-map-marker-alt"></i> Endereço: Rua Exemplo, 123 - Sua Cidade</p>
+        <p><i class="fas fa-map-marker-alt"></i> Endereço: Av. Universitária, 345 - Universitário, Criciúma - SC, 88806-000</p>
     </div>
         <!-- Redes Sociais -->
         <div class="social-media">

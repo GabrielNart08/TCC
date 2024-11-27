@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 27/11/2024 às 10:05
+-- Tempo de geração: 27-Nov-2024 às 15:22
 -- Versão do servidor: 10.4.32-MariaDB
--- Versão do PHP: 8.2.12
+-- versão do PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `clientes`
+-- Estrutura da tabela `clientes`
 --
 
 CREATE TABLE `clientes` (
@@ -43,7 +43,7 @@ CREATE TABLE `clientes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `clientes`
+-- Extraindo dados da tabela `clientes`
 --
 
 INSERT INTO `clientes` (`id_cliente`, `nome_completo`, `email`, `data_nascimento`, `cpf`, `cep`, `rua`, `bairro`, `cidade`, `estado`, `telefone`, `data_reserva`) VALUES
@@ -61,7 +61,7 @@ INSERT INTO `clientes` (`id_cliente`, `nome_completo`, `email`, `data_nascimento
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `horario`
+-- Estrutura da tabela `horario`
 --
 
 CREATE TABLE `horario` (
@@ -73,7 +73,7 @@ CREATE TABLE `horario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `horario`
+-- Extraindo dados da tabela `horario`
 --
 
 INSERT INTO `horario` (`id_horario`, `id_quadra`, `hora_inicio`, `hora_fim`, `dia_semana`) VALUES
@@ -82,7 +82,7 @@ INSERT INTO `horario` (`id_horario`, `id_quadra`, `hora_inicio`, `hora_fim`, `di
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `quadra`
+-- Estrutura da tabela `quadra`
 --
 
 CREATE TABLE `quadra` (
@@ -96,7 +96,7 @@ CREATE TABLE `quadra` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `quadra`
+-- Extraindo dados da tabela `quadra`
 --
 
 INSERT INTO `quadra` (`id_quadra`, `nome`, `endereco`, `tipo`, `preco`, `imagem`, `id_usuario`) VALUES
@@ -110,7 +110,7 @@ INSERT INTO `quadra` (`id_quadra`, `nome`, `endereco`, `tipo`, `preco`, `imagem`
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `reservas`
+-- Estrutura da tabela `reservas`
 --
 
 CREATE TABLE `reservas` (
@@ -124,7 +124,7 @@ CREATE TABLE `reservas` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `reservas`
+-- Extraindo dados da tabela `reservas`
 --
 
 INSERT INTO `reservas` (`id_reserva`, `id_quadra`, `id_horario`, `id_cliente`, `data_reserva`, `status`, `id_usuario`) VALUES
@@ -134,7 +134,7 @@ INSERT INTO `reservas` (`id_reserva`, `id_quadra`, `id_horario`, `id_cliente`, `
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `usuario`
+-- Estrutura da tabela `usuario`
 --
 
 CREATE TABLE `usuario` (
@@ -147,7 +147,7 @@ CREATE TABLE `usuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Despejando dados para a tabela `usuario`
+-- Extraindo dados da tabela `usuario`
 --
 
 INSERT INTO `usuario` (`id_usuario`, `username`, `senha`, `email`, `nome`, `tipo`) VALUES
@@ -163,27 +163,27 @@ INSERT INTO `usuario` (`id_usuario`, `username`, `senha`, `email`, `nome`, `tipo
 --
 
 --
--- Índices de tabela `clientes`
+-- Índices para tabela `clientes`
 --
 ALTER TABLE `clientes`
   ADD PRIMARY KEY (`id_cliente`),
   ADD UNIQUE KEY `id_cliente` (`id_cliente`);
 
 --
--- Índices de tabela `horario`
+-- Índices para tabela `horario`
 --
 ALTER TABLE `horario`
   ADD PRIMARY KEY (`id_horario`),
   ADD KEY `id_quadra` (`id_quadra`);
 
 --
--- Índices de tabela `quadra`
+-- Índices para tabela `quadra`
 --
 ALTER TABLE `quadra`
   ADD PRIMARY KEY (`id_quadra`);
 
 --
--- Índices de tabela `reservas`
+-- Índices para tabela `reservas`
 --
 ALTER TABLE `reservas`
   ADD PRIMARY KEY (`id_reserva`),
@@ -192,13 +192,13 @@ ALTER TABLE `reservas`
   ADD KEY `reservas_ibfk_3` (`id_cliente`);
 
 --
--- Índices de tabela `usuario`
+-- Índices para tabela `usuario`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`id_usuario`);
 
 --
--- AUTO_INCREMENT para tabelas despejadas
+-- AUTO_INCREMENT de tabelas despejadas
 --
 
 --
@@ -232,17 +232,17 @@ ALTER TABLE `usuario`
   MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- Restrições para tabelas despejadas
+-- Restrições para despejos de tabelas
 --
 
 --
--- Restrições para tabelas `horario`
+-- Limitadores para a tabela `horario`
 --
 ALTER TABLE `horario`
   ADD CONSTRAINT `horario_ibfk_1` FOREIGN KEY (`id_quadra`) REFERENCES `quadra` (`id_quadra`) ON DELETE CASCADE;
 
 --
--- Restrições para tabelas `reservas`
+-- Limitadores para a tabela `reservas`
 --
 ALTER TABLE `reservas`
   ADD CONSTRAINT `reservas_ibfk_1` FOREIGN KEY (`id_quadra`) REFERENCES `quadra` (`id_quadra`) ON DELETE CASCADE,
