@@ -8,7 +8,7 @@ body {
 }
 
 h1 {
-    background-color: green;
+    background-color: rgb(19, 184, 19);
     color: #1d1d1d;
     padding: 20px;
     text-align: center;
@@ -30,7 +30,7 @@ table th, table td {
 }
 
 table th {
-    background-color:green;
+    background-color: rgb(19, 184, 19);
     color: #1d1d1d;
 }
 
@@ -81,4 +81,9 @@ form {
     button {
         padding: 6px 12px;
     }
+}
+
+
+#naocomp{
+background-color: gray;
 }

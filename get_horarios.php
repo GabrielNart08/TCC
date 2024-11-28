@@ -3,24 +3,24 @@
 include 'conexao.php'; // Arquivo com a conexão ao banco
 
 // Verificar se os parâmetros necessários estão presentes na URL
-if (isset($_GET['id_quadra']) && isset($_GET['dia_semana'])) {
+if (isset($_GET['id_quadra']) && isset($_GET['data'])) {
     $id_quadra = $_GET['id_quadra'];
-    $dia_semana = $_GET['dia_semana'];
+    $data = $_GET['data']; // A data completa (ano-mês-dia)
 
-    // Consulta para buscar os horários disponíveis
-    $query = "SELECT id_horario, hora_inicio, hora_fim FROM horario WHERE id_quadra = ? AND dia_semana = ?";
+    // Consulta para buscar os horários disponíveis na data específica
+    $query = "SELECT id_horario, hora_inicio, hora_fim FROM horario WHERE id_quadra = ? AND dia = ?";
     $stmt = $conn->prepare($query);
 
     if ($stmt) {
         // Vincular os parâmetros e executar a consulta
-        $stmt->bind_param('is', $id_quadra, $dia_semana);
+        $stmt->bind_param('is', $id_quadra, $data);
         $stmt->execute();
         $result = $stmt->get_result();
 
         // Array para armazenar os horários
         $horarios = array();
         while ($row = $result->fetch_assoc()) {
-            // Adicionar cada horário ao array, incluindo id_horario
+            // Adicionar cada horário ao array
             $horarios[] = $row;
         }
 

@@ -31,6 +31,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_quadra = $_SESSION['id_quadra']; 
     $horario = $id_horario;  // Usando o horário passado via GET
 
+    // Obter a imagem da quadra a partir do id_quadra
+$query_imagem = "SELECT imagem FROM quadra WHERE id_quadra = '$id_quadra'";
+$result_imagem = mysqli_query($conn, $query_imagem);
+
+if ($result_imagem && mysqli_num_rows($result_imagem) > 0) {
+    $row_imagem = mysqli_fetch_assoc($result_imagem);
+    $imagem_quadra = $row_imagem['imagem'];  // Caminho da imagem da quadra
+} else {
+    $imagem_quadra = '';  // Caso a imagem não exista, atribui uma string vazia
+}
 
     // Inserir os dados na tabela `clientes`
     $query_cliente = "INSERT INTO clientes (nome_completo, email, data_nascimento, cpf, cep, rua, bairro, cidade, estado, telefone) 
@@ -41,24 +51,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Inserir a reserva na tabela `reservas`
         $id_usuario = $_SESSION['user_id']; // Exemplo: ID do usuário logado
-        $query_reserva = "INSERT INTO reservas (id_usuario, id_cliente, id_quadra, id_horario) 
-                          VALUES ('$id_usuario', '$id_cliente', '$id_quadra', '$horario')";
+        $query_reserva = "INSERT INTO reservas (id_usuario, id_cliente, id_quadra, id_horario, imagem) 
+                  VALUES ('$id_usuario', '$id_cliente', '$id_quadra', '$horario', '$imagem_quadra')";
 
-        if (mysqli_query($conn, $query_reserva)) {
-            // Reserva feita com sucesso
-            $message = "Reserva feita com sucesso!";
-            $message_type = "success"; // Cor verde para sucesso
+if (mysqli_query($conn, $query_reserva)) {
+    // Reserva feita com sucesso
+    $message = "Reserva feita com sucesso!";
+    $message_type = "success"; // Cor verde para sucesso
 
-            // Redireciona o usuário para a página de "Minhas Reservas"
-            echo "<script>
-                    setTimeout(function() {
-                        window.location.href = 'reservas.php'; 
-                    }, 2000); // Redireciona após 2 segundos
-                  </script>";
-        } else {
-            $message = "Erro ao salvar a reserva: " . mysqli_error($conn);
-            $message_type = "error";
-        }
+    // Redireciona o usuário para a página de "Minhas Reservas"
+    echo "<script>
+            setTimeout(function() {
+                window.location.href = 'reservas.php'; 
+            }, 2000); // Redireciona após 2 segundos
+          </script>";
+} else {
+    $message = "Erro ao salvar a reserva: " . mysqli_error($conn);
+    $message_type = "error";
+}
     } else {
         $message = "Erro ao salvar os dados do cliente: " . mysqli_error($conn);
         $message_type = "error";

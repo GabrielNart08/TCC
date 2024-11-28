@@ -14,12 +14,23 @@ if ($conn->connect_error) {
     die("Conexão falhou: " . $conn->connect_error);
 }
 
-// Consultar as quadras no banco de dados
-$sql = "SELECT id_quadra, nome, endereco, preco, imagem, id_usuario FROM quadra";
+// Consultar as quadras do tipo "society"
+$sql = "SELECT id_quadra, nome, endereco, preco, imagem, id_usuario FROM quadra WHERE tipo = 'society'"; // Adicionando filtro para tipo "society"
 $result = $conn->query($sql);
 
+// Dentro do loop que exibe as quadras
+$horarios_sql = "SELECT * FROM horario WHERE id_quadra = ? AND data = ?"; // Modifiquei 'data' para 'dia' para corresponder à tabela
+$stmt = $conn->prepare($horarios_sql);
+$stmt->bind_param("is", $row['id_quadra'], $data); // Recebe 'id_quadra' e a data
 
+// Aqui você pode preparar a resposta com os horários
+$stmt->execute();
+$horarios_result = $stmt->get_result();
 
+$horarios = [];
+while ($horario = $horarios_result->fetch_assoc()) {
+    $horarios[] = $horario;
+}
 ?>
 
 <!DOCTYPE html>
@@ -43,39 +54,37 @@ $result = $conn->query($sql);
 *{
     font-family: 'Poppins', sans-serif;
 }
-.horario-intervalo {
+/* Estilo para o item de horário (com o botão dentro) */
+.lista-horarios-item {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-between; /* Afastar o horário do botão */
+    align-items: center; /* Alinhar os itens no centro verticalmente */
+    background-color: #f8f9fa; /* Cor de fundo leve */
+    border: 1px solid #ddd; /* Borda leve */
     padding: 10px;
-    margin-bottom: 8px;
-    background-color: #f4f4f4;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
+    margin-bottom: 10px; /* Espaço entre os itens */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra leve */
+    width: 100%; /* Garantir que ocupe toda a largura disponível */
+    max-width: 600px; /* Limitar a largura máxima */
+    margin: 5px auto; /* Centralizar os itens na tela */
 }
 
-.horario-intervalo:hover {
-    background-color: #e0e0e0;
-}
-
-.reservar-btn-horario {
-    padding: 5px 15px;
-    background-color: #007BFF;
+/* Estilo do botão de reservar */
+.reservar-btn {
+    background-color: #28a745; /* Cor verde */
     color: white;
     border: none;
-    border-radius: 4px;
+    padding: 10px 15px; /* Aumentar o tamanho do botão */
     cursor: pointer;
+    border-radius: 5px;
     transition: background-color 0.3s ease;
 }
 
-.reservar-btn-horario:hover {
-    background-color: #0056b3;
+.reservar-btn:hover {
+    background-color: #218838; /* Cor verde mais escuro no hover */
 }
 
-.reservar-btn-horario:active {
-    background-color: #004080;
-}
 
        
 .modal {
@@ -327,56 +336,46 @@ select {
                 </div>
             </div>
 
-            <!-- Modal de Detalhes da Quadra -->
-            <div id="modal-<?= $row['id_quadra']; ?>" class="modal">
-                <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <div class="swiper-container modal-image">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide"><img src="img/<?= $row['imagem']; ?>" alt="Imagem 1"></div>
-                            <div class="swiper-slide"><img src="img/futsalquad.jpg" alt="Imagem 2"></div>
-                            <div class="swiper-slide"><img src="img/futsalsociety.jpg" alt="Imagem 3"></div>
-                        </div>
-                        <div class="swiper-button-next"></div>
-                        <div class="swiper-button-prev"></div>
-                    </div>
-                    <div class="modal-info">
-                        <h2 id="modal-nome"><?= $row['nome']; ?> - Detalhes</h2>
-                        <div class="modal-detail">
-                            <i class="fa-solid fa-location-pin"></i>
-                            Endereço: <?= $row['endereco']; ?>
-                        </div>
-                        <div class="modal-detail">
-                            <i class="fa-solid fa-dollar-sign"></i>
-                            R$ <?= number_format($row['preco'], 2, ',', '.'); ?>/hora
-                        </div>
-                        <div class="modal-detail">
-                            <i class="fa-solid fa-star"></i>
-                            Avaliações:
-                        </div>
-                        <div>
-                        <button id="btn-selecionar-dia-<?= $row['id_quadra']; ?>" class="btn-selecionar-dia" data-quadra="<?= $row['id_quadra']; ?>">Selecionar Dia</button>
-
-                            <select id="seletorDia-<?= $row['id_quadra']; ?>" class="seletorDia" style="display: none;">
-                                <option value="Segunda">Segunda-feira</option>
-                                <option value="Terça">Terça-feira</option>
-                                <option value="Quarta">Quarta-feira</option>
-                                <option value="Quinta">Quinta-feira</option>
-                                <option value="Sexta">Sexta-feira</option>
-                                <option value="Sábado">Sábado</option>
-                                <option value="Domingo">Domingo</option>
-                            </select>
-                        </div>
-
-
-                        <!-- Exibição dos horários -->
-                        <div id="horariosDisponiveis-<?= $row['id_quadra']; ?>" style="display: none;">
-                            <h3>Horários Disponíveis:</h3>
-                            <ul id="listaHorarios-<?= $row['id_quadra']; ?>"></ul>
-                        </div>
-                    </div>
-                </div>
+<!-- Modal de Detalhes da Quadra -->
+<div id="modal-<?= $row['id_quadra']; ?>" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="swiper-container modal-image">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="img/<?= $row['imagem']; ?>" alt="Imagem 1"></div>
             </div>
+            
+        </div>
+        <div class="modal-info">
+            <h2 id="modal-nome"><?= $row['nome']; ?> - Detalhes</h2>
+            <div class="modal-detail">
+                <i class="fa-solid fa-location-pin"></i>
+                Endereço: <?= $row['endereco']; ?>
+            </div>
+            <div class="modal-detail">
+                <i class="fa-solid fa-dollar-sign"></i>
+                R$ <?= number_format($row['preco'], 2, ',', '.'); ?>/hora
+            </div>
+            <div class="modal-detail">
+                <i class="fa-solid fa-star"></i>
+                Avaliações:
+            </div>
+
+            <!-- Campo para selecionar a data -->
+            <input type="date" id="dataReserva-<?= $row['id_quadra']; ?>" name="dataReserva">
+
+            <!-- Botão para disparar a busca dos horários -->
+            <button onclick="buscarHorarios(<?= $row['id_quadra']; ?>)">Buscar Horários</button>
+
+            <!-- Exibição dos horários -->
+            <div id="horariosDisponiveis-<?= $row['id_quadra']; ?>" style="display: none;">
+                <h3>Horários Disponíveis:</h3>
+                <ul id="listaHorarios-<?= $row['id_quadra']; ?>"></ul>
+            </div>
+        </div>
+    </div>
+</div>
+
         <?php endwhile; ?>
     <?php else: ?>
         <p>Não há quadras disponíveis no momento.</p>
@@ -466,7 +465,7 @@ seletorDia.addEventListener('change', function (event) {
     const diaSelecionado = event.target.value;
 
     // Fazendo a requisição AJAX para obter os horários
-    fetch(`get_horarios.php?id_quadra=${idQuadra}&dia_semana=${diaSelecionado}`)
+    fetch(`get_horarios.php?id_quadra=${idQuadra}&data=${diaSelecionado}`)
         .then(response => response.json())
         .then(data => {
             // Limpar lista de horários
@@ -554,6 +553,90 @@ document.addEventListener('click', function(event) {
         });
     }
 });
+
+
+function buscarHorarios(idQuadra) {
+    var data = document.getElementById('dataReserva-' + idQuadra).value;
+    
+    // Verifique se a data foi selecionada
+    if (!data) {
+        alert("Por favor, selecione uma data.");
+        return;
+    }
+
+    // Aqui você faz a requisição AJAX para buscar os horários
+    $.ajax({
+        url: 'buscar_horarios.php', // Crie um arquivo PHP para buscar os horários
+        type: 'POST',
+        data: { id_quadra: idQuadra, data: data },
+        success: function(response) {
+            // Exibir os horários na lista
+            var horarios = JSON.parse(response);
+            var listaHorarios = document.getElementById('listaHorarios-' + idQuadra);
+            listaHorarios.innerHTML = '';
+
+            if (horarios.length > 0) {
+                horarios.forEach(function(horario) {
+                    var li = document.createElement('li');
+                    li.classList.add('lista-horarios-item'); // Adiciona a classe para o estilo do item de horário
+                    li.textContent = horario.hora_inicio + ' - ' + horario.hora_fim;
+
+                    // Criar o botão de reservar
+                    var botaoReservar = document.createElement('button');
+                    botaoReservar.textContent = 'Reservar';
+                    botaoReservar.classList.add('reservar-btn');
+                    botaoReservar.onclick = function() {
+                        // Redireciona para dadoscliente.php com os parâmetros necessários
+                        window.location.href = "dadoscliente.php?id_horario=" + horario.id_horario + "&id_quadra=" + idQuadra + "&data=" + data;
+                    };
+
+                    // Adicionar o botão ao item de horário
+                    li.appendChild(botaoReservar);
+
+                    // Adicionar o item de horário na lista
+                    listaHorarios.appendChild(li);
+                });
+                document.getElementById('horariosDisponiveis-' + idQuadra).style.display = 'block';
+            } else {
+                listaHorarios.innerHTML = '<li>Não há horários disponíveis.</li>';
+            }
+        },
+        error: function() {
+            alert("Erro ao buscar os horários.");
+        }
+    });
+}
+
+
+
+const horariosDisponiveis = <?php echo json_encode($horarios); ?>;
+console.log(horariosDisponiveis);  // Exibir os horários no console para debug
+
+
+function reservarHorario(horarioId) {
+    $.ajax({
+        url: 'reservar_horario.php', // Arquivo PHP que processará a reserva
+        type: 'POST',
+        data: { horario_id: horarioId, usuario_id: <?php echo $_SESSION['user_id']; ?> }, // Envia o ID do horário e o usuário
+        success: function(response) {
+            alert('Reserva realizada com sucesso!');
+            // Atualizar a interface, como ocultar o modal ou limpar os campos
+        },
+        error: function() {
+            alert('Erro ao realizar a reserva. Tente novamente.');
+        }
+    });
+}
+
+// Aplique a função 'reservarHorario' no botão de reserva
+document.querySelectorAll('.reservar-btn-horario').forEach(button => {
+    button.addEventListener('click', function() {
+        const horarioId = this.dataset.horarioId;  // Passe o id do horário para o servidor
+        reservarHorario(horarioId);
+    });
+});
+
+
 
 </script>
 

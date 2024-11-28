@@ -21,59 +21,64 @@ if ($conn->connect_error) {
 // Variável para verificar se o cadastro foi bem-sucedido
 $cadastro_sucesso = false; 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+// Verifica se o formulário foi enviado
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Dados da quadra
     $nome = $_POST['nome'];
     $endereco = $_POST['endereco'];
-    $preco = $_POST['preco'];
+    $preco = $_POST['preco']; // O preço deve ser um número decimal
+    $tipo = $_POST['tipo'];  // Captura o tipo de quadra (futsal ou society)
     $imagem = $_FILES['imagem']['name'];
 
-    // Upload da imagem
-    $target_dir = "img/";
-    $target_file = $target_dir . basename($_FILES["imagem"]["name"]);
-    if (!move_uploaded_file($_FILES["imagem"]["tmp_name"], $target_file)) {
-        die("Erro ao fazer upload da imagem.");
-    }
+        // Upload da imagem
+        $target_dir = "img/";
+        $target_file = $target_dir . basename($_FILES["imagem"]["name"]);
+        if (!move_uploaded_file($_FILES["imagem"]["tmp_name"], $target_file)) {
+            die("Erro ao fazer upload da imagem.");
+        }
 
-    // Inserir quadra no banco
-    $sql = "INSERT INTO quadra (nome, endereco, preco, imagem, id_usuario) VALUES (?, ?, ?, ?, ?)";
+    // Inserir quadra no banco de dados com o tipo selecionado
+    $sql = "INSERT INTO quadra (nome, endereco, preco, tipo, imagem, id_usuario) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssdsi", $nome, $endereco, $preco, $imagem, $_SESSION['user_id']);
-    
+    $stmt->bind_param("ssdssi", $nome, $endereco, $preco, $tipo, $imagem, $_SESSION['user_id']); 
+
     if ($stmt->execute()) {
         $id_quadra = $stmt->insert_id; // Obtém o ID da quadra cadastrada
 
-        // Inserir horários no banco
+        // Inserir os horários se estiverem preenchidos
         if (!empty($_POST['dias']) && !empty($_POST['hora_inicio']) && !empty($_POST['hora_fim'])) {
-            $dias = $_POST['dias'];
+            $datas = $_POST['dias'];
             $horas_inicio = $_POST['hora_inicio'];
             $horas_fim = $_POST['hora_fim'];
-
-            $sql_horarios = "INSERT INTO horario (id_quadra, hora_inicio, hora_fim, dia_semana) VALUES (?, ?, ?, ?)";
+        
+            $sql_horarios = "INSERT INTO horario (id_quadra, hora_inicio, hora_fim, data) VALUES (?, ?, ?, ?)";
             $stmt_horarios = $conn->prepare($sql_horarios);
-
-            // Inserir cada horário
-            foreach ($dias as $index => $dia) {
+        
+            foreach ($datas as $index => $data) {
                 $hora_inicio = $horas_inicio[$index];
                 $hora_fim = $horas_fim[$index];
-
-                $stmt_horarios->bind_param("isss", $id_quadra, $hora_inicio, $hora_fim, $dia);
+        
+                $stmt_horarios->bind_param("isss", $id_quadra, $hora_inicio, $hora_fim, $data);
                 if (!$stmt_horarios->execute()) {
                     echo "Erro ao inserir horário: " . $stmt_horarios->error;
                 }
             }
         }
-
+        
         // Definir que o cadastro foi bem-sucedido
         $cadastro_sucesso = true; 
     } else {
         echo "Erro ao cadastrar quadra: " . $stmt->error;
     }
+    if ($_FILES['imagem']['error'] !== UPLOAD_ERR_OK) {
+        die("Erro ao fazer upload da imagem: " . $_FILES['imagem']['error']);
+    }
+    
 
     $stmt->close();
+    $conn->close();
 }
-
-$conn->close();
 ?>
 
 <!-- HTML com Formulário -->
@@ -85,7 +90,7 @@ $conn->close();
     <!-- Botão de Voltar -->
     <a href="painel-admin.php" class="btn-voltar">← Voltar</a>
 
-    <!-- Exibe o modal de sucesso se o cadastro for bem-sucedido -->
+    <!-- Exibe o modal de sucesso se o cadastro foi bem-sucedido -->
     <?php if ($cadastro_sucesso): ?>
         <div id="successModal" class="success-modal">
             <div class="modal-content">
@@ -109,27 +114,25 @@ $conn->close();
             <input type="text" id="preco" name="preco" required>
         </div>
         <div>
+            <label for="tipo">Tipo de Quadra:</label>
+            <select id="tipo" name="tipo" required>
+                <option value="society">Society</option>
+                <option value="futsal">Futsal</option>
+            </select>
+        </div>
+        <div>
             <label for="imagem">Imagem da Quadra:</label>
             <input type="file" id="imagem" name="imagem" required>
         </div>
         <div id="horarios">
-        <label>Horários Disponíveis:</label>
-        <div>
-            <select name="dias[]" required>
-                <option value="">Selecione o dia</option>
-                <option value="Segunda">Segunda</option>
-                <option value="Terça">Terça</option>
-                <option value="Quarta">Quarta</option>
-                <option value="Quinta">Quinta</option>
-                <option value="Sexta">Sexta</option>
-                <option value="Sábado">Sábado</option>
-                <option value="Domingo">Domingo</option>
-            </select>
-            <input type="time" name="hora_inicio[]" required>
-            <input type="time" name="hora_fim[]" required>
-            <button type="button" id="addHorario">Adicionar horário</button>
+            <label>Horários Disponíveis:</label>
+            <div>
+                <input type="date" name="dias[]" required>
+                <input type="time" name="hora_inicio[]" required>
+                <input type="time" name="hora_fim[]" required>
+                <button type="button" id="addHorario">Adicionar horário</button>
+            </div>
         </div>
-    </div>
         <button type="submit">Cadastrar Quadra</button>
     </form>
 </div>
@@ -153,28 +156,18 @@ document.querySelector(".close-btn")?.addEventListener("click", function() {
     document.getElementById("successModal").style.display = "none";
 });
 
-
-// Função para adicionar mais horários
+// Função para adicionar horários
 document.getElementById("addHorario").addEventListener("click", function() {
     const horariosContainer = document.getElementById("horarios");
     const novoHorario = document.createElement("div");
     novoHorario.classList.add("horario-item");
     novoHorario.innerHTML = `
-        <select name="dias[]" required>
-            <option value="">Selecione o dia</option>
-            <option value="Segunda">Segunda</option>
-            <option value="Terça">Terça</option>
-            <option value="Quarta">Quarta</option>
-            <option value="Quinta">Quinta</option>
-            <option value="Sexta">Sexta</option>
-            <option value="Sábado">Sábado</option>
-            <option value="Domingo">Domingo</option>
-        </select>
+        <input type="date" name="dias[]" required>
         <input type="time" name="hora_inicio[]" required>
         <input type="time" name="hora_fim[]" required>
         <button type="button" class="remover-horario">Remover</button>
     `;
-    
+
     horariosContainer.appendChild(novoHorario);
 
     // Adiciona o evento de remover o horário
@@ -183,6 +176,7 @@ document.getElementById("addHorario").addEventListener("click", function() {
     });
 });
 </script>
+
 
 <style>
 /* Estilo para o modal de sucesso */
@@ -234,4 +228,6 @@ document.getElementById("addHorario").addEventListener("click", function() {
 .btn-voltar:hover {
     background-color: #45a049;
 }
+
+
 </style>

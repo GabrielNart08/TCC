@@ -66,16 +66,19 @@ $result_reservas = mysqli_query($conn, $query_reservas);
             <?php
             // Buscar o horário e a data da reserva com base no id_horario
             $id_horario = $reserva['id_horario'];
-            $query_horario = "SELECT hora_inicio, hora_fim, dia_semana FROM horario WHERE id_horario = '$id_horario'";
+            $query_horario = "SELECT hora_inicio, hora_fim, data FROM horario WHERE id_horario = '$id_horario'";
             $result_horario = mysqli_query($conn, $query_horario);
             $horario = mysqli_fetch_assoc($result_horario);
+
+            // Formatar a data para o formato dia/mês/ano
+            $data_reserva = date('d/m/Y', strtotime($horario['data']));
             ?>
             <tr>
                 <td><?= htmlspecialchars($reserva['nome_usuario']); ?></td>
                 <td><?= htmlspecialchars($reserva['nome_quadra']); ?></td>
                 <td><?= htmlspecialchars($reserva['cpf']); ?></td>
                 <td>
-                    <?= htmlspecialchars($horario['dia_semana']); ?> 
+                    <?= $data_reserva; ?> 
                     <?= htmlspecialchars($horario['hora_inicio']) . ' - ' . htmlspecialchars($horario['hora_fim']); ?>
                 </td>
                 <td><?= htmlspecialchars($reserva['status']); ?></td>
@@ -87,7 +90,7 @@ $result_reservas = mysqli_query($conn, $query_reservas);
                     </form>
                     <form method="post" action="processar-reserva.php" style="display: inline;">
                         <input type="hidden" name="id_reserva" value="<?= $reserva['id_reserva']; ?>">
-                        <button type="submit" name="acao" value="nao_compareceu">Não Compareceu</button>
+                        <button type="submit" name="acao" id="naocomp"  value="nao_compareceu">Não Compareceu</button>
                     </form>
                 </td>
             </tr>

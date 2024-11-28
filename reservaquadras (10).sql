@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 27-Nov-2024 às 15:22
+-- Tempo de geração: 28-Nov-2024 às 05:47
 -- Versão do servidor: 10.4.32-MariaDB
 -- versão do PHP: 8.2.12
 
@@ -56,7 +56,12 @@ INSERT INTO `clientes` (`id_cliente`, `nome_completo`, `email`, `data_nascimento
 (9, 'gustavo felipe', 'gugadugrau@gmail.com', '2006-04-08', '118.882.769-32', '88850-00', 'Rua Padre Mário Labarbuta', 'Pinheirinho', 'Forquilhinha', 'SC', '(48) 99918-4155', '2024-11-27 04:42:14'),
 (10, 'Fernando Colombo', 'gugadugrau@gmail.com', '2000-02-22', '118.882.769-32', '88850-00', 'Rua Padre Mário Labarbuta', 'Rio Maina', 'Forquilhinha', 'SC', '(48) 99918-4155', '2024-11-27 05:30:38'),
 (11, 'Isadora Pinto', 'gugafelipe@gmail.com', '2001-03-22', '118.882.769-32', '88850-00', 'Rua Padre Mário Labarbuta', 'Pinheirinho', 'Forquilhinha', 'SC', '(48) 99918-4155', '2024-11-27 08:42:48'),
-(12, 'Isadora Carvalho', 'gugafelipe@gmail.com', '2000-10-10', '118.882.769-32', '88850-00', 'Rua Padre Mário Labarbuta', 'Pinheirinho', 'Forquilhinha', 'SC', '(48) 99918-4155', '2024-11-27 09:02:27');
+(12, 'Isadora Carvalho', 'gugafelipe@gmail.com', '2000-10-10', '118.882.769-32', '88850-00', 'Rua Padre Mário Labarbuta', 'Pinheirinho', 'Forquilhinha', 'SC', '(48) 99918-4155', '2024-11-27 09:02:27'),
+(13, 'Gustavo Topanotti Fernandes', 'gabrielnart132@gmail.com', '2000-02-10', '086.343.539-40', '88817-67', 'Servidão Santa Fé', 'Rio Maina', 'Criciúma', 'SC', '(48) 99856-6251', '2024-11-28 01:47:28'),
+(14, 'Pedro Paulo', 'gabrielnart132@gmail.com', '1998-02-10', '086.343.539-40', '88817-67', 'Servidão Santa Fé', 'Rio Maina', 'Criciúma', 'SC', '(48) 99856-6251', '2024-11-28 02:19:10'),
+(15, 'Pedro Paulo', 'gabrielnart132@gmail.com', '1998-02-10', '086.343.539-40', '88817-67', 'Servidão Santa Fé', 'Rio Maina', 'Criciúma', 'SC', '(48) 99856-6251', '2024-11-28 02:19:35'),
+(16, 'Gabriel Serafim Nart', 'gabrielnart132@gmail.com', '0006-04-08', '086.343.539-40', '88817677', 'Servidão Santa Fé', 'Rio Maina', 'Criciúma', 'SC', '(48) 99856-6251', '2024-11-28 02:35:10'),
+(17, 'Gabriel Serafim Nart', 'gabrielnart132@gmail.com', '2006-04-08', '086.343.539-40', '88817-67', 'Servidão Santa Fé', 'Rio Maina', 'Criciúma', 'SC', '(48) 99856-6251', '2024-11-28 03:48:28');
 
 -- --------------------------------------------------------
 
@@ -67,17 +72,19 @@ INSERT INTO `clientes` (`id_cliente`, `nome_completo`, `email`, `data_nascimento
 CREATE TABLE `horario` (
   `id_horario` int(11) NOT NULL,
   `id_quadra` int(11) NOT NULL,
+  `data` date DEFAULT NULL,
   `hora_inicio` time NOT NULL,
-  `hora_fim` time NOT NULL,
-  `dia_semana` enum('Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo') NOT NULL
+  `hora_fim` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Extraindo dados da tabela `horario`
 --
 
-INSERT INTO `horario` (`id_horario`, `id_quadra`, `hora_inicio`, `hora_fim`, `dia_semana`) VALUES
-(37, 34, '22:00:00', '23:00:00', 'Quarta');
+INSERT INTO `horario` (`id_horario`, `id_quadra`, `data`, `hora_inicio`, `hora_fim`) VALUES
+(53, 48, '2024-12-10', '19:00:00', '20:00:00'),
+(55, 47, '2025-02-10', '10:00:00', '11:00:00'),
+(56, 47, '2025-02-11', '11:00:00', '12:00:00');
 
 -- --------------------------------------------------------
 
@@ -89,7 +96,7 @@ CREATE TABLE `quadra` (
   `id_quadra` int(11) NOT NULL,
   `nome` varchar(100) NOT NULL,
   `endereco` varchar(255) NOT NULL,
-  `tipo` varchar(50) NOT NULL,
+  `tipo` varchar(255) NOT NULL,
   `preco` decimal(10,2) NOT NULL,
   `imagem` varchar(255) NOT NULL,
   `id_usuario` int(11) NOT NULL
@@ -100,12 +107,8 @@ CREATE TABLE `quadra` (
 --
 
 INSERT INTO `quadra` (`id_quadra`, `nome`, `endereco`, `tipo`, `preco`, `imagem`, `id_usuario`) VALUES
-(29, 'Brotolandia', 'R. João Olivo - Rio Maina, Criciúma - SC, 88806-813', '', 100.00, 'Captura de tela 2023-10-22 211138.png', 1),
-(30, 'Brotolandia', 'R. João Olivo - Rio Maina, Criciúma - SC, 88806-813', '', 200.00, 'Captura de tela 2023-10-22 211138.png', 1),
-(31, 'Angeloni', 'R. João Olivo - Rio Maina, Criciúma - SC, 88806-813', '', 130.00, 'Captura de tela 2023-10-22 211138.png', 1),
-(32, 'tigres', 'R. João Olivo - Rio Maina, Criciúma - SC, 88806-813', '', 130.00, 'Captura de tela 2023-10-22 211138.png', 1),
-(33, 'Angeloni', 'R. João Olivo - Rio Maina, Criciúma - SC, 88806-813', '', 120.00, 'Captura de tela 2023-10-22 211138.png', 1),
-(34, 'tigressss', 'R. João Olivo - Rio Maina, Criciúma - SC, 88806-813', '', 200.00, 'Captura de tela 2023-10-22 211138.png', 1);
+(47, 'Angelonii', 'Rua Henrique Lagee', 'society', 180.00, 'Imagens Turma Do Chaves - Chaves E Seu Madruga Em Png Grátis 1F2.png', 1),
+(48, 'tigrezao', 'Rua Henrique Lage', 'society', 180.00, 'Leonardo_Phoenix_A_cluttered_and_disorganized_clock_or_calenda_3.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -119,17 +122,10 @@ CREATE TABLE `reservas` (
   `id_horario` int(11) NOT NULL,
   `id_cliente` int(11) NOT NULL,
   `data_reserva` timestamp NOT NULL DEFAULT current_timestamp(),
-  `status` enum('em análise','confirmada','não compareceu','cancelada','ok') NOT NULL DEFAULT 'em análise',
-  `id_usuario` int(11) NOT NULL
+  `status` enum('pendente','confirmada','OK','Não Compareceu') NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `imagem` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Extraindo dados da tabela `reservas`
---
-
-INSERT INTO `reservas` (`id_reserva`, `id_quadra`, `id_horario`, `id_cliente`, `data_reserva`, `status`, `id_usuario`) VALUES
-(9, 34, 37, 11, '2024-11-27 08:42:48', '', 5),
-(10, 34, 37, 12, '2024-11-27 09:02:27', 'ok', 5);
 
 -- --------------------------------------------------------
 
@@ -205,25 +201,25 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de tabela `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de tabela `horario`
 --
 ALTER TABLE `horario`
-  MODIFY `id_horario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id_horario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT de tabela `quadra`
 --
 ALTER TABLE `quadra`
-  MODIFY `id_quadra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id_quadra` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT de tabela `reservas`
 --
 ALTER TABLE `reservas`
-  MODIFY `id_reserva` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_reserva` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de tabela `usuario`

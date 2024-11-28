@@ -2,34 +2,47 @@
 session_start();
 require 'conexao.php';
 
-// Verificar se o usuário está logado como administrador
+// Verifica se o usuário está logado e se é administrador
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'administrador') {
-    header('Location: login.php');
-    exit;
+    header("Location: login.php");
+    exit();
 }
 
 $id_admin = $_SESSION['user_id'];
 
-// Alterando a consulta SQL para refletir as relações corretas
+// Alterando a consulta SQL para pegar as reservas com status "OK" ou "Não Compareceu"
 $query_reservas = "
     SELECT r.id_reserva, r.status, c.nome_completo AS nome_usuario, c.cpf, q.nome AS nome_quadra, q.endereco, r.id_horario
     FROM reservas r
-    JOIN clientes c ON r.id_cliente = c.id_cliente  -- Pegando dados diretamente da tabela clientes
+    JOIN clientes c ON r.id_cliente = c.id_cliente
     JOIN quadra q ON r.id_quadra = q.id_quadra
-    WHERE r.status = 'pendente' AND q.id_usuario = '$id_admin'
+    WHERE r.status IN ('OK', 'nao_compareceu') AND q.id_usuario = '$id_admin'
 ";
 
 $result_reservas = mysqli_query($conn, $query_reservas);
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/reservaspend.css">
-    <title>Admin - Reservas Pendentes</title>
+    <title>Admin - Reservas Finalizadas</title>
+    <link rel="stylesheet" href="styles/reservasconf.css">
     <style>
+
+h1 {
+    background-color:darkblue;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin: 0;
+}
+
+table th {
+    background-color: darkblue;
+    color: white;
+}
         /* Estilo básico para o botão de voltar */
         .btn-voltar {
             position: fixed;
@@ -51,15 +64,15 @@ $result_reservas = mysqli_query($conn, $query_reservas);
     </style>
 </head>
 <body>
-    <h1>Reservas Pendentes</h1>
+    <h1>Reservas Finalizadas (OK / Não Compareceu)</h1>
+
     <table border="1">
         <tr>
-            <th>Nome do Cliente</th>
+            <th>Usuário</th>
             <th>Quadra</th>
             <th>CPF</th>
             <th>Data e Horário</th>
             <th>Status</th>
-            <th>Ações</th>
         </tr>
         <?php while ($reserva = mysqli_fetch_assoc($result_reservas)): ?>
             <?php
@@ -81,18 +94,6 @@ $result_reservas = mysqli_query($conn, $query_reservas);
                     <?= htmlspecialchars($horario['hora_inicio']) . ' - ' . htmlspecialchars($horario['hora_fim']); ?>
                 </td>
                 <td><?= htmlspecialchars($reserva['status']); ?></td>
-                <td>
-                    <!-- Formulário para confirmar a reserva -->
-                    <form method="post" action="processar-reserva.php" style="display: inline;">
-                        <input type="hidden" name="id_reserva" value="<?= $reserva['id_reserva']; ?>">
-                        <button type="submit" name="acao" value="confirmar">Confirmar</button>
-                    </form>
-                    <!-- Formulário para cancelar a reserva -->
-                    <form method="post" action="processar-reserva.php" style="display: inline;">
-                        <input type="hidden" name="id_reserva" value="<?= $reserva['id_reserva']; ?>">
-                        <button type="submit" name="acao" value="cancelar">Cancelar</button>
-                    </form>
-                </td>
             </tr>
         <?php endwhile; ?>
     </table>
